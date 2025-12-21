@@ -68,7 +68,7 @@ export const FlowAnimator: React.FC<Props> = ({ nodes, edges: initialEdges, sequ
           prevNodes.map((n) => ({
             ...n,
             className: n.id === nodeId
-              ? 'animate-pulse ring-4 ring-accent-blue'
+              ? 'animate-pulse ring-4 ring-white'
               : sequence.includes(n.id)
               ? ''
               : 'opacity-30',
@@ -94,7 +94,7 @@ export const FlowAnimator: React.FC<Props> = ({ nodes, edges: initialEdges, sequ
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          className="relative w-full h-[500px] rounded-2xl overflow-hidden border-2 border-accent-blue shadow-lg bg-background-secondary"
+          className="relative w-full h-[500px] rounded-3xl overflow-hidden border border-white/10 shadow-xl bg-neutral-900"
         >
           <ReactFlow
             nodes={animatedNodes}
@@ -109,17 +109,17 @@ export const FlowAnimator: React.FC<Props> = ({ nodes, edges: initialEdges, sequ
             proOptions={{ hideAttribution: true }}
           >
             <Background
-              color="var(--color-border-secondary)"
+              color="rgba(255,255,255,0.1)"
               gap={16}
               size={1}
             />
           </ReactFlow>
 
           {/* Progress Indicator */}
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-surface-primary px-6 py-3 rounded-full border border-border-primary shadow-lg backdrop-blur-sm">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-neutral-900/90 px-6 py-3 rounded-full border border-white/10 shadow-lg backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 bg-accent-blue rounded-full animate-pulse" />
-              <p className="text-sm font-medium text-text-primary">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+              <p className="text-sm font-medium text-white">
                 {currentStep >= 0 && currentStep < sequence.length
                   ? `Processing: ${sequence[currentStep]}`
                   : 'Initializing request...'}
@@ -128,9 +128,9 @@ export const FlowAnimator: React.FC<Props> = ({ nodes, edges: initialEdges, sequ
           </div>
 
           {/* Progress Bar */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-surface-secondary">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-white/10">
             <motion.div
-              className="h-full bg-gradient-to-r from-accent-blue to-purple-500"
+              className="h-full bg-gradient-to-r from-white to-white/50"
               initial={{ width: '0%' }}
               animate={{
                 width: currentStep >= 0 ? `${((currentStep + 1) / sequence.length) * 100}%` : '0%',

@@ -88,37 +88,37 @@ export const APITester: React.FC<Props> = ({ endpoint, diagramNodes, diagramEdge
   const getMethodColor = (method: string) => {
     switch (method) {
       case 'GET':
-        return 'bg-status-success/10 text-status-success border-status-success/20';
+        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
       case 'POST':
-        return 'bg-accent-blue/10 text-accent-blue border-accent-blue/20';
+        return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
       case 'PUT':
-        return 'bg-status-warning/10 text-status-warning border-status-warning/20';
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
       case 'PATCH':
-        return 'bg-status-info/10 text-status-info border-status-info/20';
+        return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
       case 'DELETE':
-        return 'bg-status-error/10 text-status-error border-status-error/20';
+        return 'bg-red-500/10 text-red-400 border-red-500/20';
       default:
-        return 'bg-surface-secondary text-text-primary border-border-primary';
+        return 'bg-white/5 text-white border-white/20';
     }
   };
 
   return (
     <div className="space-y-6">
       {/* Endpoint Info Card */}
-      <div className="bg-surface-primary border border-border-primary rounded-2xl overflow-hidden">
-        <div className="p-6 border-b border-border-primary bg-surface-secondary">
-          <h3 className="text-xl font-bold text-text-primary mb-2">{endpoint.name}</h3>
-          <p className="text-sm text-text-secondary mb-4">{endpoint.description}</p>
+      <div className="bg-neutral-900 border border-white/10 rounded-3xl overflow-hidden">
+        <div className="p-6 border-b border-white/10 bg-white/[0.02]">
+          <h3 className="text-xl font-bold text-white mb-2">{endpoint.name}</h3>
+          <p className="text-sm text-white/60 mb-4">{endpoint.description}</p>
 
           <div className="flex items-center gap-3 flex-wrap">
             <span
-              className={`px-3 py-1.5 rounded-md font-mono text-sm font-bold border ${getMethodColor(
+              className={`px-3 py-1.5 rounded-lg font-mono text-sm font-bold border ${getMethodColor(
                 endpoint.method
               )}`}
             >
               {endpoint.method}
             </span>
-            <code className="text-sm text-text-secondary font-mono bg-surface-primary px-3 py-1.5 rounded-md border border-border-primary">
+            <code className="text-sm text-white/70 font-mono bg-white/5 px-3 py-1.5 rounded-lg border border-white/10">
               {endpoint.path}
             </code>
           </div>
@@ -135,12 +135,12 @@ export const APITester: React.FC<Props> = ({ endpoint, diagramNodes, diagramEdge
 
           {/* Flow Speed Control */}
           {endpoint.flowVisualization && (
-            <div className="p-4 bg-surface-secondary rounded-xl border border-border-primary">
+            <div className="p-4 bg-white/[0.02] rounded-2xl border border-white/10">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-semibold text-text-primary">
+                <label className="text-sm font-semibold text-white">
                   Flow Animation Speed
                 </label>
-                <span className="text-xs text-text-tertiary px-2 py-1 bg-surface-primary rounded">
+                <span className="text-xs text-white/50 px-2 py-1 bg-white/5 rounded-lg">
                   {speed === 0.5 ? 'Fast (2x)' : speed === 1 ? 'Normal (1x)' : speed === 2 ? 'Slow (0.5x)' : `${speed}x slower`}
                 </span>
               </div>
@@ -152,9 +152,9 @@ export const APITester: React.FC<Props> = ({ endpoint, diagramNodes, diagramEdge
                 value={speed}
                 onChange={(e) => setSpeed(Number(e.target.value))}
                 disabled={isRunning}
-                className="w-full h-2 bg-surface-primary rounded-lg appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-accent-blue [&::-webkit-slider-thumb]:cursor-pointer"
+                className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:cursor-pointer"
               />
-              <div className="flex justify-between text-xs text-text-tertiary mt-2">
+              <div className="flex justify-between text-xs text-white/40 mt-2">
                 <span>Fast</span>
                 <span>Slow</span>
               </div>
@@ -166,12 +166,12 @@ export const APITester: React.FC<Props> = ({ endpoint, diagramNodes, diagramEdge
             onClick={handleExecute}
             disabled={isRunning}
             className={`
-              w-full px-6 py-3 rounded-xl font-semibold
+              w-full px-6 py-3 rounded-2xl font-semibold
               transition-all duration-200 flex items-center justify-center gap-2
               ${
                 isRunning
-                  ? 'bg-surface-secondary text-text-tertiary cursor-not-allowed'
-                  : 'bg-accent-blue text-white hover:bg-accent-blueHover shadow-md hover:shadow-lg'
+                  ? 'bg-white/5 text-white/40 cursor-not-allowed'
+                  : 'bg-white text-black hover:bg-white/90 shadow-lg hover:shadow-xl'
               }
             `}
           >

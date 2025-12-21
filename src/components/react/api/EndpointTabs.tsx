@@ -36,17 +36,17 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
   const getMethodColor = (method: string) => {
     switch (method) {
       case 'GET':
-        return 'border-status-success text-status-success hover:bg-status-success/10';
+        return 'border-emerald-500/50 text-emerald-400 bg-emerald-500/10';
       case 'POST':
-        return 'border-accent-blue text-accent-blue hover:bg-accent-blue/10';
+        return 'border-blue-500/50 text-blue-400 bg-blue-500/10';
       case 'PUT':
-        return 'border-status-warning text-status-warning hover:bg-status-warning/10';
+        return 'border-amber-500/50 text-amber-400 bg-amber-500/10';
       case 'PATCH':
-        return 'border-status-info text-status-info hover:bg-status-info/10';
+        return 'border-cyan-500/50 text-cyan-400 bg-cyan-500/10';
       case 'DELETE':
-        return 'border-status-error text-status-error hover:bg-status-error/10';
+        return 'border-red-500/50 text-red-400 bg-red-500/10';
       default:
-        return 'border-border-primary text-text-primary hover:bg-surface-secondary';
+        return 'border-white/20 text-white/70 bg-white/5';
     }
   };
 
@@ -55,7 +55,7 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
   return (
     <div className="space-y-6">
       {/* Tabs Navigation */}
-      <div className="flex items-center gap-2 border-b border-border-primary overflow-x-auto">
+      <div className="flex items-center gap-2 border-b border-white/10 overflow-x-auto">
         {/* Visible Tabs */}
         {visibleEndpoints.map((endpoint, index) => (
           <button
@@ -65,8 +65,8 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
               px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-all duration-200
               ${
                 activeTab === index
-                  ? 'border-accent-blue text-accent-blue'
-                  : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border-primary'
+                  ? 'border-white text-white'
+                  : 'border-transparent text-white/50 hover:text-white/80 hover:border-white/30'
               }
             `}
           >
@@ -88,8 +88,8 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
                 px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-all duration-200 flex items-center gap-2
                 ${
                   activeTab >= MAX_VISIBLE_TABS
-                    ? 'border-accent-blue text-accent-blue'
-                    : 'border-transparent text-text-secondary hover:text-text-primary hover:border-border-primary'
+                    ? 'border-white text-white'
+                    : 'border-transparent text-white/50 hover:text-white/80 hover:border-white/30'
                 }
               `}
             >
@@ -99,7 +99,7 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
 
             {/* Dropdown Menu */}
             {isDropdownOpen && (
-              <div className="absolute top-full left-0 mt-1 w-72 bg-surface-primary border border-border-primary rounded-xl shadow-lg overflow-hidden z-10">
+              <div className="absolute top-full left-0 mt-1 w-72 bg-neutral-900 border border-white/10 rounded-2xl shadow-xl overflow-hidden z-10">
                 {dropdownEndpoints.map((endpoint, index) => {
                   const actualIndex = MAX_VISIBLE_TABS + index;
                   return (
@@ -113,8 +113,8 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
                         w-full px-4 py-3 text-left transition-colors duration-150 flex items-center gap-3
                         ${
                           activeTab === actualIndex
-                            ? 'bg-accent-blue/10 text-accent-blue'
-                            : 'text-text-primary hover:bg-surface-secondary'
+                            ? 'bg-white/10 text-white'
+                            : 'text-white/70 hover:bg-white/5 hover:text-white'
                         }
                       `}
                     >
@@ -123,7 +123,7 @@ export const EndpointTabs: React.FC<Props> = ({ endpoints, diagramNodes, diagram
                       </span>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{endpoint.name}</div>
-                        <div className="text-xs text-text-tertiary truncate">{endpoint.path}</div>
+                        <div className="text-xs text-white/40 truncate">{endpoint.path}</div>
                       </div>
                     </button>
                   );

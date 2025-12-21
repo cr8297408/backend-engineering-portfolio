@@ -18,20 +18,20 @@ const projects = projectFiles.map(file => {
   <!-- Navbar -->
   <Navbar client:load />
 
-  <div class="min-h-screen px-4 py-24">
-    <div class="max-w-6xl mx-auto">
+  <div class="min-h-screen bg-black px-4 py-24">
+    <div class="max-w-7xl mx-auto">
       <!-- Header -->
-      <div class="mb-12 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+      <div class="mb-16 text-center">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-medium text-white mb-6">
           All Projects
         </h1>
-        <p class="text-xl text-text-secondary max-w-2xl mx-auto">
+        <p class="text-xl text-white/60 max-w-2xl mx-auto">
           Explore my backend engineering work, infrastructure designs, and architectural solutions
         </p>
       </div>
 
-      <!-- Projects Grid -->
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Projects Gallery Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
         {projects.map((project) => (
           <ProjectCard
             title={project.title}
@@ -40,16 +40,17 @@ const projects = projectFiles.map(file => {
             slug={project.slug}
             featured={project.featured}
             github={project.github}
+            image={project.image}
             client:load
           />
         ))}
       </div>
 
       <!-- Back to Home -->
-      <div class="mt-16 text-center">
+      <div class="text-center">
         <a
-          href="/#projects"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-surface-primary text-accent-blue rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-accent-blue"
+          href="/"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>

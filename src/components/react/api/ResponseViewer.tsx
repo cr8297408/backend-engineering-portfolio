@@ -11,21 +11,21 @@ export const ResponseViewer: React.FC<Props> = ({ response }) => {
   const isError = response.status >= 400;
 
   return (
-    <div className="bg-surface-primary border border-border-primary rounded-2xl overflow-hidden">
+    <div className="bg-neutral-900 border border-white/10 rounded-3xl overflow-hidden">
       {/* Status Header */}
-      <div className="p-6 border-b border-border-primary bg-surface-secondary">
+      <div className="p-6 border-b border-white/10 bg-white/[0.02]">
         <div className="flex items-center justify-between">
-          <h4 className="text-lg font-semibold text-text-primary">Response</h4>
+          <h4 className="text-lg font-semibold text-white">Response</h4>
           <div className="flex items-center gap-2">
-            {isSuccess && <CheckCircle className="w-5 h-5 text-status-success" />}
-            {isError && <XCircle className="w-5 h-5 text-status-error" />}
+            {isSuccess && <CheckCircle className="w-5 h-5 text-emerald-400" />}
+            {isError && <XCircle className="w-5 h-5 text-red-400" />}
             <span
               className={`text-sm font-semibold px-3 py-1 rounded-full ${
                 isSuccess
-                  ? 'bg-status-success/10 text-status-success'
+                  ? 'bg-emerald-500/10 text-emerald-400'
                   : isError
-                  ? 'bg-status-error/10 text-status-error'
-                  : 'bg-status-info/10 text-status-info'
+                  ? 'bg-red-500/10 text-red-400'
+                  : 'bg-blue-500/10 text-blue-400'
               }`}
             >
               {response.status} {response.statusText}
@@ -38,10 +38,10 @@ export const ResponseViewer: React.FC<Props> = ({ response }) => {
         {/* Response Headers */}
         {response.headers && Object.keys(response.headers).length > 0 && (
           <div>
-            <h5 className="text-sm font-semibold text-text-primary mb-3 uppercase tracking-wide">
+            <h5 className="text-sm font-semibold text-white mb-3 uppercase tracking-wide">
               Response Headers
             </h5>
-            <pre className="p-4 bg-surface-secondary rounded-lg text-xs font-mono text-text-secondary overflow-x-auto border border-border-primary">
+            <pre className="p-4 bg-white/5 rounded-2xl text-xs font-mono text-white/70 overflow-x-auto border border-white/10">
               {JSON.stringify(response.headers, null, 2)}
             </pre>
           </div>
@@ -49,10 +49,10 @@ export const ResponseViewer: React.FC<Props> = ({ response }) => {
 
         {/* Response Body */}
         <div>
-          <h5 className="text-sm font-semibold text-text-primary mb-3 uppercase tracking-wide">
+          <h5 className="text-sm font-semibold text-white mb-3 uppercase tracking-wide">
             Response Body
           </h5>
-          <pre className="p-4 bg-surface-secondary rounded-lg text-xs font-mono text-text-secondary overflow-x-auto border border-border-primary max-h-[400px] overflow-y-auto">
+          <pre className="p-4 bg-white/5 rounded-2xl text-xs font-mono text-white/70 overflow-x-auto border border-white/10 max-h-[400px] overflow-y-auto">
             {response.error
               ? response.error
               : JSON.stringify(response.data, null, 2)}

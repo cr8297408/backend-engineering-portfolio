@@ -64,14 +64,17 @@ const skills = {
 
   <!-- About Section -->
   <section id="about" class="py-32 px-4 bg-black">
-    <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">
-        I'm a backend engineer with a passion<br class="hidden md:block"/> for building robust, scalable systems.
-      </h2>
-      <p class="text-lg md:text-xl text-white/60 leading-relaxed">
-        My expertise lies in designing microservices architectures, event-driven systems, 
-        and high-performance APIs. I believe in clean code, DDD, and infrastructure as code.
-      </p>
+    <div class="max-w-5xl mx-auto">
+      <!-- Main Statement -->
+      <div class="text-center mb-20">
+        <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">
+          Backend engineer passionate about<br class="hidden md:block"/> building scalable, maintainable systems.
+        </h2>
+        <p class="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
+          With expertise in microservices architecture, cloud infrastructure, and distributed systems, 
+          I focus on creating solutions that are both technically excellent and business-driven.
+        </p>
+      </div>
     </div>
   </section>
 
@@ -81,44 +84,92 @@ const skills = {
       <h2 class="text-3xl md:text-4xl font-medium text-white mb-16 text-center">
         Technical Skills
       </h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Languages & Frameworks -->
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-medium text-white mb-6">Languages</h3>
-          <div class="space-y-3">
-            {skills.languages.map((skill) => (
-              <p class="text-white/60">{skill}</p>
-            ))}
+      <div class="grid md:grid-cols-2 gap-4">
+        <!-- Languages Card -->
+        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-medium text-white">Languages</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {skills.languages.map((skill) => (
+                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        <!-- Databases -->
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-medium text-white mb-6">Databases</h3>
-          <div class="space-y-3">
-            {skills.databases.map((skill) => (
-              <p class="text-white/60">{skill}</p>
-            ))}
+        <!-- Databases Card -->
+        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-medium text-white">Databases</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {skills.databases.map((skill) => (
+                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        <!-- Infrastructure -->
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-medium text-white mb-6">Infrastructure</h3>
-          <div class="space-y-3">
-            {skills.infrastructure.map((skill) => (
-              <p class="text-white/60">{skill}</p>
-            ))}
+        <!-- Infrastructure Card -->
+        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-medium text-white">Infrastructure</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {skills.infrastructure.map((skill) => (
+                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
 
-        <!-- Patterns & Architecture -->
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-medium text-white mb-6">Architecture</h3>
-          <div class="space-y-3">
-            {skills.patterns.map((skill) => (
-              <p class="text-white/60">{skill}</p>
-            ))}
+        <!-- Architecture Card -->
+        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <div class="relative">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-medium text-white">Architecture</h3>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              {skills.patterns.map((skill) => (
+                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
+                  {skill}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -126,32 +177,79 @@ const skills = {
   </section>
 
   <!-- Projects Section -->
-  <section id="projects" class="py-24 px-4 bg-neutral-950">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-medium text-white mb-4">
-          Featured Projects
-        </h2>
-        <p class="text-lg text-white/60">
-          Explore my work building scalable systems and architectures
+  <section id="projects" class="py-24 px-4 bg-black">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-20">
+        <h3 class="text-xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">What Makes This Portfolio Different</h3>
+        <p class="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
+          This portfolio showcases my work through interactive architecture diagrams and live API demonstrations, giving you a hands-on view of how my projects are built and how they work. 
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-8 mb-12">
-        {projects.map((project) => (
-          <ProjectCard
-            title={project.title}
-            description={project.longDescription}
-            technologies={project.technologies}
-            slug={project.slug}
-            featured={project.featured}
-            github={project.github}
-            client:load
-          />
+      <!-- What Makes Me Different -->
+      <div class="grid md:grid-cols-3 gap-6 mb-20">
+        <!-- Interactive Architecture -->
+        <div class="group relative bg-gradient-to-br from-white/[0.05] to-transparent rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium text-white mb-3">Interactive Diagrams</h3>
+          <p class="text-white/50 text-sm leading-relaxed">
+            Explore system designs by clicking on components to see detailed explanations of each service and integration point.
+          </p>
+        </div>
+
+        <!-- Live API Testing -->
+        <div class="group relative bg-gradient-to-br from-white/[0.05] to-transparent rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium text-white mb-3">Live API Testing</h3>
+          <p class="text-white/50 text-sm leading-relaxed">
+            Test endpoints directly from the browser. See request/response flows visualized in real-time.
+          </p>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="group relative bg-gradient-to-br from-white/[0.05] to-transparent rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+          </div>
+          <h3 class="text-xl font-medium text-white mb-3">Cloud Infrastructure</h3>
+          <p class="text-white/50 text-sm leading-relaxed">
+            View infrastructure setups with detailed breakdowns of networking, security, and deployment strategies.
+          </p>
+        </div>
+      </div>
+
+      <!-- Gallery Grid - Masonry style -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project, index) => (
+          <div class:list={[
+            index === 0 && "md:col-span-2 lg:col-span-1 lg:row-span-2",
+            index === 1 && "lg:col-span-2",
+          ]}>
+            <ProjectCard
+              title={project.title}
+              description={project.longDescription}
+              technologies={project.technologies}
+              slug={project.slug}
+              featured={project.featured}
+              github={project.github}
+              image={project.image}
+              client:load
+            />
+          </div>
         ))}
       </div>
 
-      <div class="text-center">
+      <div class="text-center mt-16">
         <a
           href="/projects"
           class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"

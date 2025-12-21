@@ -1,5 +1,4 @@
 import React from 'react';
-import { ArrowRight, Github } from 'lucide-react';
 
 interface ProjectCardProps {
   title: string;
@@ -8,6 +7,7 @@ interface ProjectCardProps {
   slug: string;
   featured?: boolean;
   github?: string;
+  image?: string;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -15,64 +15,53 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   description,
   technologies,
   slug,
-  featured,
-  github,
+  image,
 }) => {
-  return (
-    <div className="group bg-surface-primary border border-border-primary rounded-2xl p-6 hover:border-accent-blue transition-all duration-300 hover:shadow-lg">
-      {featured && (
-        <span className="inline-block px-3 py-1 bg-accent-blue/10 text-accent-blue text-xs font-semibold rounded-full mb-4">
-          Featured
-        </span>
-      )}
+  // Generate a gradient based on the title for projects without images
+  const getGradient = (str: string) => {
+    const gradients = [
+      'from-blue-600 via-purple-600 to-pink-500',
+      'from-emerald-500 via-teal-500 to-cyan-500',
+      'from-orange-500 via-red-500 to-pink-500',
+      'from-violet-600 via-purple-600 to-indigo-600',
+      'from-amber-500 via-orange-500 to-yellow-500',
+      'from-cyan-500 via-blue-500 to-indigo-500',
+    ];
+    const index = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % gradients.length;
+    return gradients[index];
+  };
 
-      <h3 className="text-xl font-bold text-text-primary mb-2 group-hover:text-accent-blue transition-colors duration-200">
+  return (
+    <a
+      href={`/projects/${slug}`}
+      className="group block"
+    >
+      {/* Image/Thumbnail Container */}
+      <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 bg-neutral-900">
+        {image ? (
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className={`w-full h-full bg-gradient-to-br ${getGradient(title)} opacity-80`}>
+            {/* Tech icons overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-white/20 text-6xl font-bold">
+                {title.charAt(0)}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+      </div>
+
+      {/* Title */}
+      <h3 className="text-sm font-medium text-white/80 text-center tracking-wide uppercase group-hover:text-white transition-colors duration-200">
         {title}
       </h3>
-
-      <p className="text-text-secondary mb-4 line-clamp-2">
-        {description}
-      </p>
-
-      {/* Technologies */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {technologies.slice(0, 4).map((tech) => (
-          <span
-            key={tech}
-            className="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md"
-          >
-            {tech}
-          </span>
-        ))}
-        {technologies.length > 4 && (
-          <span className="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">
-            +{technologies.length - 4}
-          </span>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="flex items-center gap-3 pt-4 border-t border-border-primary">
-        <a
-          href={`/projects/${slug}`}
-          className="flex items-center gap-2 text-accent-blue hover:text-accent-blueHover font-medium text-sm group/link"
-        >
-          View Details
-          <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-200" />
-        </a>
-
-        {github && (
-          <a
-            href={github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-auto p-2 rounded-lg bg-surface-secondary hover:bg-accent-blue/10 text-text-secondary hover:text-accent-blue transition-all duration-200"
-            aria-label="View on GitHub"
-          >
-            <Github className="w-4 h-4" />
-          </a>
-        )}
-      </div>
-    </div>
+    </a>
   );
 };
