@@ -1,0 +1,96 @@
+import React, { useState, useEffect } from 'react';
+import { Menu, X } from 'lucide-react';
+
+export const Navbar: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHomePage, setIsHomePage] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    // Check if we're on the home page
+    setIsHomePage(window.location.pathname === '/');
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Use full paths when not on home page
+  const navLinks = [
+    { href: isHomePage ? '#about' : '/#about', label: 'About' },
+    { href: isHomePage ? '#projects' : '/#projects', label: 'Projects' },
+    { href: isHomePage ? '#skills' : '/#skills', label: 'Skills' },
+    { href: isHomePage ? '#contact' : '/#contact', label: 'Contact' },
+  ];
+
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'bg-surface-primary/80 backdrop-blur-lg border-b border-border-primary shadow-md'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <a
+            href="/"
+            className="text-xl font-bold text-text-primary hover:text-accent-blue transition-colors duration-200"
+          >
+            Backend Dev
+          </a>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-text-secondary hover:text-accent-blue transition-colors duration-200 font-medium"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center gap-4">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="p-2 rounded-lg bg-surface-secondary hover:bg-surface-primary transition-colors duration-200"
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5 text-text-primary" />
+              ) : (
+                <Menu className="w-5 h-5 text-text-primary" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-border-primary bg-surface-primary/95 backdrop-blur-lg">
+          <div className="px-4 py-4 space-y-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-text-secondary hover:text-accent-blue hover:bg-surface-secondary rounded-lg transition-all duration-200 font-medium"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};

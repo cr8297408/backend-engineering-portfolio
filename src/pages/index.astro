@@ -1,50 +1,246 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Navbar } from '../components/react/ui/Navbar';
+import { ProjectCard } from '../components/react/ui/ProjectCard';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+// Load all projects
+const projectsDir = join(process.cwd(), 'public', 'data', 'projects');
+const projectFiles = readdirSync(projectsDir).filter(f => f.endsWith('.json'));
+const projects = projectFiles.map(file => {
+  const content = readFileSync(join(projectsDir, file), 'utf-8');
+  return JSON.parse(content);
+}).filter(p => p.featured).slice(0, 4); // Show up to 4 featured projects
+
+const skills = {
+  languages: ['TypeScript', 'Go', 'Python', 'Node.js'],
+  databases: ['PostgreSQL', 'MongoDB', 'Redis', 'Elasticsearch'],
+  infrastructure: ['Docker', 'Kubernetes', 'AWS', 'Terraform'],
+  patterns: ['Microservices', 'Event-Driven', 'CQRS', 'DDD']
+};
 ---
 
-<Layout title="Backend Engineer Portfolio">
-  <div class="min-h-screen flex items-center justify-center px-4">
-    <div class="max-w-4xl mx-auto text-center">
+<Layout title="Backend Engineer Portfolio - Building Scalable Systems">
+  <!-- Navbar -->
+  <Navbar client:load />
+
+  <!-- Hero Section with Background GIF -->
+  <section class="relative min-h-screen flex items-center justify-center px-4 pt-16 overflow-hidden">
+    <!-- Background GIF -->
+    <div class="absolute inset-0 z-0">
+      <video
+        src="/background.mp4"
+        autoplay
+        loop
+        muted
+        class="w-full h-full object-cover"
+      />
+      <!-- Overlay gradient for better text readability -->
+      <div class="absolute inset-0 bg-gradient-to-b from-bg-primary/50 via-bg-primary/70 to-bg-primary"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="relative z-10 max-w-4xl mx-auto text-center">
       <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-accent-blue to-purple-500 bg-clip-text text-transparent">
         Backend Engineer
       </h1>
-      <p class="text-xl md:text-2xl text-text-secondary mb-8">
-        Building scalable systems with clean architecture
+      <p class="text-xl md:text-2xl text-text-secondary mb-4">
+        Building scalable, resilient systems with clean architecture
+      </p>
+      <p class="text-base text-text-tertiary mb-8 max-w-2xl mx-auto">
+        Specializing in microservices, distributed systems, and high-performance APIs.
+        Passionate about event-driven architectures and infrastructure as code.
       </p>
       <div class="flex gap-4 justify-center flex-wrap">
         <a
-          href="/projects"
-          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium"
+          href="#projects"
+          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
         >
           View Projects
         </a>
         <a
-          href="/about"
+          href="#contact"
           class="px-6 py-3 bg-surface-secondary text-text-primary rounded-xl hover:bg-surface-primary transition-all duration-200 font-medium border border-border-primary"
         >
-          About Me
+          Get in Touch
         </a>
       </div>
+    </div>
 
-      <!-- Test design system colors -->
-      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="p-4 bg-surface-primary border border-border-primary rounded-lg">
-          <div class="w-12 h-12 bg-accent-blue rounded-full mx-auto mb-2"></div>
-          <p class="text-sm text-text-secondary">Accent Blue</p>
+    <!-- Bottom blur effect -->
+    <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent backdrop-blur-md z-20"></div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 px-4 bg-bg-primary">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-8 text-center">
+        About Me
+      </h2>
+      <div class="bg-surface-secondary/50 border border-border-primary rounded-2xl p-8 md:p-12 backdrop-blur-sm">
+        <p class="text-lg text-text-secondary mb-6">
+          I'm a backend engineer with a passion for building robust, scalable systems that power
+          modern applications. My expertise lies in designing and implementing microservices
+          architectures, event-driven systems, and high-performance APIs.
+        </p>
+        <p class="text-lg text-text-secondary mb-6">
+          I believe in writing clean, maintainable code and following best practices like DDD,
+          CQRS, and event sourcing. I'm experienced in deploying and managing containerized
+          applications on Kubernetes, implementing CI/CD pipelines, and maintaining
+          infrastructure as code.
+        </p>
+        <p class="text-lg text-text-secondary">
+          When I'm not coding, I enjoy contributing to open source, writing technical articles,
+          and exploring new technologies in the backend ecosystem.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills Section -->
+  <section id="skills" class="py-20 px-4 bg-bg-secondary">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-12 text-center">
+        Technical Skills
+      </h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Languages & Frameworks -->
+        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
+          <h3 class="text-xl font-semibold text-text-primary mb-4">Languages</h3>
+          <div class="space-y-2">
+            {skills.languages.map((skill) => (
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-accent-blue rounded-full"></div>
+                <span class="text-text-secondary">{skill}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div class="p-4 bg-surface-secondary border border-border-primary rounded-lg">
-          <div class="w-12 h-12 bg-status-success rounded-full mx-auto mb-2"></div>
-          <p class="text-sm text-text-secondary">Success</p>
+
+        <!-- Databases -->
+        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
+          <h3 class="text-xl font-semibold text-text-primary mb-4">Databases</h3>
+          <div class="space-y-2">
+            {skills.databases.map((skill) => (
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-status-success rounded-full"></div>
+                <span class="text-text-secondary">{skill}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div class="p-4 bg-surface-primary border border-border-primary rounded-lg">
-          <div class="w-12 h-12 bg-status-warning rounded-full mx-auto mb-2"></div>
-          <p class="text-sm text-text-secondary">Warning</p>
+
+        <!-- Infrastructure -->
+        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
+          <h3 class="text-xl font-semibold text-text-primary mb-4">Infrastructure</h3>
+          <div class="space-y-2">
+            {skills.infrastructure.map((skill) => (
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-status-warning rounded-full"></div>
+                <span class="text-text-secondary">{skill}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div class="p-4 bg-surface-secondary border border-border-primary rounded-lg">
-          <div class="w-12 h-12 bg-status-error rounded-full mx-auto mb-2"></div>
-          <p class="text-sm text-text-secondary">Error</p>
+
+        <!-- Patterns & Architecture -->
+        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
+          <h3 class="text-xl font-semibold text-text-primary mb-4">Architecture</h3>
+          <div class="space-y-2">
+            {skills.patterns.map((skill) => (
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span class="text-text-secondary">{skill}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="py-20 px-4 bg-bg-primary">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+          Featured Projects
+        </h2>
+        <p class="text-lg text-text-secondary">
+          Explore my work building scalable systems and architectures
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6 mb-8">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.title}
+            description={project.longDescription}
+            technologies={project.technologies}
+            slug={project.slug}
+            featured={project.featured}
+            github={project.github}
+            client:load
+          />
+        ))}
+      </div>
+
+      <div class="text-center">
+        <a
+          href="/projects"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-surface-primary text-accent-blue rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-accent-blue"
+        >
+          View All Projects
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="py-20 px-4 bg-bg-secondary">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+        Let's Work Together
+      </h2>
+      <p class="text-lg text-text-secondary mb-8">
+        Interested in collaborating or have a project in mind? Let's discuss how we can build
+        something great together.
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a
+          href="mailto:your.email@example.com"
+          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+        >
+          Send Email
+        </a>
+        <a
+          href="https://github.com/yourusername"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-6 py-3 bg-surface-primary text-text-primary rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-border-primary"
+        >
+          GitHub Profile
+        </a>
+        <a
+          href="https://linkedin.com/in/yourprofile"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-6 py-3 bg-surface-primary text-text-primary rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-border-primary"
+        >
+          LinkedIn
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-8 px-4 border-t border-border-primary bg-bg-primary">
+    <div class="max-w-6xl mx-auto text-center text-text-tertiary text-sm">
+      <p>© {new Date().getFullYear()} Backend Engineer Portfolio. Built with Astro and React.</p>
+    </div>
+  </footer>
 </Layout>

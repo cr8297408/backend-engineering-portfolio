@@ -1,125 +1,61 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Navbar } from '../components/react/ui/Navbar';
+import { ProjectCard } from '../components/react/ui/ProjectCard';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+// Load all projects
+const projectsDir = join(process.cwd(), 'public', 'data', 'projects');
+const projectFiles = readdirSync(projectsDir).filter(f => f.endsWith('.json'));
+const projects = projectFiles.map(file => {
+  const content = readFileSync(join(projectsDir, file), 'utf-8');
+  return JSON.parse(content);
+});
 ---
 
-<Layout title="Projects - Backend Engineer Portfolio">
-  <div class="min-h-screen px-4 py-12">
+<Layout title="All Projects - Backend Engineer Portfolio">
+  <!-- Navbar -->
+  <Navbar client:load />
+
+  <div class="min-h-screen px-4 py-24">
     <div class="max-w-6xl mx-auto">
       <!-- Header -->
-      <div class="mb-12">
-        <a
-          href="/"
-          class="inline-flex items-center text-text-secondary hover:text-accent-blue transition-all duration-200 mb-6"
-        >
-          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-          </svg>
-          Back to Home
-        </a>
-
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          My Projects
+      <div class="mb-12 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-text-primary mb-4">
+          All Projects
         </h1>
-        <p class="text-xl text-text-secondary">
+        <p class="text-xl text-text-secondary max-w-2xl mx-auto">
           Explore my backend engineering work, infrastructure designs, and architectural solutions
         </p>
       </div>
 
-      <!-- Projects Grid - Placeholder -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Placeholder Project Cards -->
-        <div class="bg-surface-primary border border-border-primary rounded-2xl p-6 hover:border-accent-blue transition-all duration-200 group">
-          <div class="mb-4">
-            <span class="px-3 py-1 bg-accent-blueTint text-accent-blue text-xs font-medium rounded-full">
-              Featured
-            </span>
-          </div>
-
-          <h3 class="text-xl font-semibold text-text-primary group-hover:text-accent-blue transition-all duration-200 mb-3">
-            Microservices Platform
-          </h3>
-
-          <p class="text-sm text-text-secondary mb-4">
-            Scalable microservices architecture with event-driven communication, CQRS pattern, and distributed tracing
-          </p>
-
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Node.js</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">TypeScript</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">PostgreSQL</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Redis</span>
-          </div>
-
-          <div class="flex items-center text-accent-blue text-sm font-medium">
-            View Project
-            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Placeholder Card 2 -->
-        <div class="bg-surface-primary border border-border-primary rounded-2xl p-6 hover:border-accent-blue transition-all duration-200 group">
-          <h3 class="text-xl font-semibold text-text-primary group-hover:text-accent-blue transition-all duration-200 mb-3">
-            API Gateway
-          </h3>
-
-          <p class="text-sm text-text-secondary mb-4">
-            High-performance API gateway with rate limiting, authentication, and request routing
-          </p>
-
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Go</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">gRPC</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Docker</span>
-          </div>
-
-          <div class="flex items-center text-accent-blue text-sm font-medium">
-            View Project
-            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- Placeholder Card 3 -->
-        <div class="bg-surface-primary border border-border-primary rounded-2xl p-6 hover:border-accent-blue transition-all duration-200 group">
-          <h3 class="text-xl font-semibold text-text-primary group-hover:text-accent-blue transition-all duration-200 mb-3">
-            Cloud Infrastructure
-          </h3>
-
-          <p class="text-sm text-text-secondary mb-4">
-            Kubernetes cluster setup with auto-scaling, monitoring, and CI/CD pipelines
-          </p>
-
-          <div class="flex flex-wrap gap-2 mb-4">
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Kubernetes</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">Terraform</span>
-            <span class="px-2 py-1 bg-surface-secondary text-text-tertiary text-xs rounded-md">AWS</span>
-          </div>
-
-          <div class="flex items-center text-accent-blue text-sm font-medium">
-            View Project
-            <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </div>
+      <!-- Projects Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.title}
+            description={project.longDescription}
+            technologies={project.technologies}
+            slug={project.slug}
+            featured={project.featured}
+            github={project.github}
+            client:load
+          />
+        ))}
       </div>
 
-      <!-- Coming Soon Message -->
-      <div class="mt-16 text-center p-8 bg-surface-secondary border border-border-primary rounded-2xl">
-        <div class="w-16 h-16 bg-accent-blueTint rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg class="w-8 h-8 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+      <!-- Back to Home -->
+      <div class="mt-16 text-center">
+        <a
+          href="/#projects"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-surface-primary text-accent-blue rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-accent-blue"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
           </svg>
-        </div>
-        <h3 class="text-xl font-semibold text-text-primary mb-2">
-          Real Projects Coming Soon
-        </h3>
-        <p class="text-text-secondary">
-          These are placeholder cards. Real projects with interactive diagrams and API testing will be added next.
-        </p>
+          Back to Home
+        </a>
       </div>
     </div>
   </div>

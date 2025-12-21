@@ -12,7 +12,12 @@ html.dark {
 }
 
 /* Ensure theme applies to entire page */
-html,
+html {
+  scroll-behavior: smooth;
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
 body {
   background-color: var(--color-bg-primary);
   color: var(--color-text-primary);

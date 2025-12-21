@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Navbar } from '../components/react/ui/Navbar';
 ---
 
 <Layout title="About - Backend Engineer Portfolio">
-  <div class="min-h-screen px-4 py-12">
+  <Navbar client:load />
+  <div class="min-h-screen px-4 py-24">
     <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="mb-12">
