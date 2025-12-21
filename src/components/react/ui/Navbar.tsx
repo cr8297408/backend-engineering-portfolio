@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-surface-primary/80 backdrop-blur-lg border-b border-border-primary shadow-md'
+          ? 'bg-black/80 backdrop-blur-lg border-b border-white/10 shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -39,7 +39,7 @@ export const Navbar: React.FC = () => {
           {/* Logo */}
           <a
             href="/"
-            className="text-xl font-bold text-text-primary hover:text-accent-blue transition-colors duration-200"
+            className="text-xl font-bold text-white hover:text-white/80 transition-colors duration-200"
           >
             Backend Dev
           </a>
@@ -50,7 +50,7 @@ export const Navbar: React.FC = () => {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-text-secondary hover:text-accent-blue transition-colors duration-200 font-medium"
+                className="text-white/70 hover:text-white transition-colors duration-200 font-medium"
               >
                 {link.label}
               </a>
@@ -61,13 +61,13 @@ export const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-4">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-lg bg-surface-secondary hover:bg-surface-primary transition-colors duration-200"
+              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors duration-200"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-text-primary" />
+                <X className="w-5 h-5 text-white" />
               ) : (
-                <Menu className="w-5 h-5 text-text-primary" />
+                <Menu className="w-5 h-5 text-white" />
               )}
             </button>
           </div>
@@ -76,14 +76,14 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t border-border-primary bg-surface-primary/95 backdrop-blur-lg">
+        <div className="md:hidden border-t border-white/10 bg-black/95 backdrop-blur-lg">
           <div className="px-4 py-4 space-y-3">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block px-4 py-2 text-text-secondary hover:text-accent-blue hover:bg-surface-secondary rounded-lg transition-all duration-200 font-medium"
+                className="block px-4 py-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 font-medium"
               >
                 {link.label}
               </a>
