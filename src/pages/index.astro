@@ -41,8 +41,8 @@ const skills = {
 
     <!-- Content -->
     <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
-      <h1 class="text-6xl md:text-7xl lg:text-8xl font-medium mb-8 text-white tracking-tight">
-        Backend<br/>Engineer
+      <h1 id="blur-title" class="text-7xl md:text-8xl lg:text-9xl font-bold mb-8 text-white tracking-tight cursor-default">
+        <span class="blur-char">B</span><span class="blur-char">a</span><span class="blur-char">c</span><span class="blur-char">k</span><span class="blur-char">e</span><span class="blur-char">n</span><span class="blur-char">d</span><br/><span class="blur-char">E</span><span class="blur-char">n</span><span class="blur-char">g</span><span class="blur-char">i</span><span class="blur-char">n</span><span class="blur-char">e</span><span class="blur-char">e</span><span class="blur-char">r</span>
       </h1>
       <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
         Where scalable systems and clean<br class="hidden md:block"/> architecture come together
@@ -315,3 +315,51 @@ const skills = {
     </div>
   </footer>
 </Layout>
+
+<style>
+  .blur-char {
+    display: inline-block;
+    transition: filter 0.15s ease-out, opacity 0.15s ease-out;
+  }
+</style>
+
+<script>
+  const title = document.getElementById('blur-title');
+  const chars = title?.querySelectorAll('.blur-char');
+  
+  if (title && chars) {
+    const blurRadius = 150; // Distance in pixels where blur starts
+    const maxBlur = 8; // Maximum blur amount
+    
+    title.addEventListener('mousemove', (e) => {
+      const rect = title.getBoundingClientRect();
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+      
+      chars.forEach((char: any) => {
+        const charRect = char.getBoundingClientRect();
+        const charCenterX = charRect.left + charRect.width / 2;
+        const charCenterY = charRect.top + charRect.height / 2;
+        
+        const distance = Math.sqrt(
+          Math.pow(mouseX - charCenterX, 2) + 
+          Math.pow(mouseY - charCenterY, 2)
+        );
+        
+        // Calculate blur based on distance (closer = more blur)
+        const blur = Math.max(0, maxBlur - (distance / blurRadius) * maxBlur);
+        const opacity = 1 - (blur / maxBlur) * 0.4;
+        
+        char.style.filter = `blur(${blur}px)`;
+        char.style.opacity = opacity.toString();
+      });
+    });
+    
+    title.addEventListener('mouseleave', () => {
+      chars.forEach((char: any) => {
+        char.style.filter = 'blur(0px)';
+        char.style.opacity = '1';
+      });
+    });
+  }
+</script>
