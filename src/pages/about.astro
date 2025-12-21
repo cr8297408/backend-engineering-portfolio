@@ -1,0 +1,162 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="About - Backend Engineer Portfolio">
+  <div class="min-h-screen px-4 py-12">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="mb-12">
+        <a
+          href="/"
+          class="inline-flex items-center text-text-secondary hover:text-accent-blue transition-all duration-200 mb-6"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+          </svg>
+          Back to Home
+        </a>
+
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          About Me
+        </h1>
+        <p class="text-xl text-text-secondary">
+          Backend Engineer specializing in scalable systems and clean architecture
+        </p>
+      </div>
+
+      <!-- Content Sections -->
+      <div class="space-y-8">
+        <!-- Introduction -->
+        <section class="bg-surface-primary border border-border-primary rounded-2xl p-8">
+          <h2 class="text-2xl font-semibold mb-4">Introduction</h2>
+          <p class="text-text-secondary leading-relaxed mb-4">
+            I'm a backend engineer passionate about building scalable, maintainable systems that solve real-world problems.
+            With expertise in microservices architecture, cloud infrastructure, and distributed systems, I focus on creating
+            solutions that are both technically excellent and business-driven.
+          </p>
+          <p class="text-text-secondary leading-relaxed">
+            This portfolio showcases my work through interactive architecture diagrams and live API demonstrations,
+            giving you a hands-on view of how my projects are built and how they work.
+          </p>
+        </section>
+
+        <!-- Skills -->
+        <section class="bg-surface-primary border border-border-primary rounded-2xl p-8">
+          <h2 class="text-2xl font-semibold mb-6">Technical Skills</h2>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Languages -->
+            <div>
+              <h3 class="text-lg font-semibold text-accent-blue mb-3">Languages</h3>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">TypeScript</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Node.js</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Go</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Python</span>
+              </div>
+            </div>
+
+            <!-- Databases -->
+            <div>
+              <h3 class="text-lg font-semibold text-accent-blue mb-3">Databases</h3>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">PostgreSQL</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">MongoDB</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Redis</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Elasticsearch</span>
+              </div>
+            </div>
+
+            <!-- Infrastructure -->
+            <div>
+              <h3 class="text-lg font-semibold text-accent-blue mb-3">Infrastructure</h3>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Kubernetes</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Docker</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">AWS</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Terraform</span>
+              </div>
+            </div>
+
+            <!-- Tools -->
+            <div>
+              <h3 class="text-lg font-semibold text-accent-blue mb-3">Tools & Patterns</h3>
+              <div class="flex flex-wrap gap-2">
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Microservices</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">Event-Driven</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">CI/CD</span>
+                <span class="px-3 py-1.5 bg-surface-secondary text-text-primary text-sm rounded-lg">gRPC</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- What Makes This Portfolio Different -->
+        <section class="bg-surface-primary border border-border-primary rounded-2xl p-8">
+          <h2 class="text-2xl font-semibold mb-4">What Makes This Portfolio Different</h2>
+
+          <div class="space-y-4">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent-blueTint rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-text-primary mb-2">Interactive Architecture Diagrams</h3>
+                <p class="text-text-secondary text-sm">
+                  Explore system designs by clicking on components to see detailed explanations of each service, database, and integration point.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent-blueTint rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-text-primary mb-2">Live API Testing</h3>
+                <p class="text-text-secondary text-sm">
+                  Test endpoints directly from the browser. See request/response flows visualized in real-time as data moves through the system.
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 bg-accent-blueTint rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                <svg class="w-5 h-5 text-accent-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                </svg>
+              </div>
+              <div>
+                <h3 class="font-semibold text-text-primary mb-2">Infrastructure Visualization</h3>
+                <p class="text-text-secondary text-sm">
+                  View cloud infrastructure setups with detailed breakdowns of networking, security, and deployment strategies.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="text-center p-8 bg-gradient-to-r from-accent-blue to-purple-500 rounded-2xl">
+          <h2 class="text-2xl font-bold text-white mb-4">
+            Let's Build Something Great Together
+          </h2>
+          <p class="text-white/90 mb-6">
+            Interested in working together or want to discuss a project?
+          </p>
+          <a
+            href="/projects"
+            class="inline-block px-6 py-3 bg-surface-primary text-accent-blue rounded-xl hover:bg-surface-secondary transition-all duration-200 font-semibold border-2 border-accent-blue"
+          >
+            View My Projects
+          </a>
+        </section>
+      </div>
+    </div>
+  </div>
+</Layout>

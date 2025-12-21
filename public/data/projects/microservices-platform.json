@@ -1,0 +1,280 @@
+{
+  "id": "microservices-platform",
+  "slug": "microservices-platform",
+  "title": "E-Commerce Microservices Platform",
+  "description": "Scalable microservices architecture for e-commerce with event-driven communication",
+  "longDescription": "A production-ready microservices platform built with Node.js, featuring event sourcing, CQRS pattern, and distributed tracing. Handles 10k+ requests per second with 99.9% uptime.",
+  "technologies": ["Node.js", "TypeScript", "PostgreSQL", "Redis", "RabbitMQ", "Docker", "Kubernetes"],
+  "status": "completed",
+  "featured": true,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "api-gateway",
+          "type": "api",
+          "position": { "x": 400, "y": 50 },
+          "data": {
+            "label": "API Gateway",
+            "icon": "gateway",
+            "description": "Entry point for all client requests",
+            "details": "Built with Express.js, handles authentication, rate limiting, and request routing to appropriate microservices. Implements circuit breaker pattern for resilience.",
+            "technologies": ["Express.js", "JWT", "Rate Limiter", "Circuit Breaker"],
+            "metrics": {
+              "throughput": "10,000 req/s",
+              "latency": "< 50ms",
+              "uptime": "99.95%"
+            }
+          }
+        },
+        {
+          "id": "user-service",
+          "type": "service",
+          "position": { "x": 200, "y": 200 },
+          "data": {
+            "label": "User Service",
+            "icon": "users",
+            "description": "Manages user accounts and authentication",
+            "details": "Handles user registration, profile management, and authentication. Uses bcrypt for password hashing and JWT for session management. Implements event sourcing for audit trails.",
+            "technologies": ["Node.js", "PostgreSQL", "bcrypt", "Event Sourcing"],
+            "metrics": {
+              "users": "100k+",
+              "avg_response": "120ms"
+            }
+          }
+        },
+        {
+          "id": "product-service",
+          "type": "service",
+          "position": { "x": 600, "y": 200 },
+          "data": {
+            "label": "Product Service",
+            "icon": "package",
+            "description": "Product catalog and inventory",
+            "details": "Manages product information, categories, and real-time inventory tracking with eventual consistency. Uses Redis for caching frequently accessed products.",
+            "technologies": ["Node.js", "PostgreSQL", "Redis", "Elasticsearch"],
+            "metrics": {
+              "products": "50k+",
+              "cache_hit": "85%"
+            }
+          }
+        },
+        {
+          "id": "order-service",
+          "type": "service",
+          "position": { "x": 400, "y": 350 },
+          "data": {
+            "label": "Order Service",
+            "icon": "service",
+            "description": "Order processing and management",
+            "details": "Handles order creation, payment processing, and order tracking. Implements saga pattern for distributed transactions across services.",
+            "technologies": ["Node.js", "PostgreSQL", "Saga Pattern"],
+            "metrics": {
+              "daily_orders": "5,000+",
+              "processing_time": "200ms"
+            }
+          }
+        },
+        {
+          "id": "postgres",
+          "type": "database",
+          "position": { "x": 200, "y": 500 },
+          "data": {
+            "label": "PostgreSQL",
+            "icon": "database",
+            "description": "Primary relational database",
+            "details": "Multi-tenant PostgreSQL setup with read replicas for scaling. Uses connection pooling (pg_bouncer) and prepared statements for optimal performance. Automated backups every 6 hours.",
+            "technologies": ["PostgreSQL 15", "pg_bouncer", "Replication"],
+            "metrics": {
+              "connections": "500 max",
+              "storage": "2TB",
+              "backup_frequency": "6h"
+            }
+          }
+        },
+        {
+          "id": "redis",
+          "type": "cache",
+          "position": { "x": 600, "y": 500 },
+          "data": {
+            "label": "Redis Cache",
+            "icon": "zap",
+            "description": "Distributed caching layer",
+            "details": "Redis cluster for session storage, rate limiting, and frequently accessed data caching. Implements cache-aside pattern with TTL-based expiration.",
+            "technologies": ["Redis 7", "Redis Cluster", "Sentinel"],
+            "metrics": {
+              "hit_rate": "92%",
+              "memory": "16GB"
+            }
+          }
+        },
+        {
+          "id": "rabbitmq",
+          "type": "queue",
+          "position": { "x": 50, "y": 350 },
+          "data": {
+            "label": "RabbitMQ",
+            "icon": "message-queue",
+            "description": "Message broker for async communication",
+            "details": "Handles event-driven communication between services with guaranteed delivery and dead-letter queues for failed messages. Supports pub/sub and work queue patterns.",
+            "technologies": ["RabbitMQ 3.12", "AMQP"],
+            "metrics": {
+              "messages_per_sec": "1,000+",
+              "queues": "15"
+            }
+          }
+        },
+        {
+          "id": "elasticsearch",
+          "type": "database",
+          "position": { "x": 750, "y": 350 },
+          "data": {
+            "label": "Elasticsearch",
+            "icon": "database",
+            "description": "Search and analytics engine",
+            "details": "Full-text search for products with autocomplete, faceted search, and relevance scoring. Syncs data from PostgreSQL via event streams.",
+            "technologies": ["Elasticsearch 8", "Kibana"],
+            "metrics": {
+              "documents": "50k+",
+              "search_latency": "< 100ms"
+            }
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "api-gateway",
+          "target": "user-service",
+          "label": "HTTP/REST",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2",
+          "source": "api-gateway",
+          "target": "product-service",
+          "label": "HTTP/REST",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3",
+          "source": "api-gateway",
+          "target": "order-service",
+          "label": "HTTP/REST",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "user-service",
+          "target": "postgres",
+          "label": "SQL",
+          "type": "step"
+        },
+        {
+          "id": "e5",
+          "source": "product-service",
+          "target": "postgres",
+          "label": "SQL",
+          "type": "step"
+        },
+        {
+          "id": "e6",
+          "source": "order-service",
+          "target": "postgres",
+          "label": "SQL",
+          "type": "step"
+        },
+        {
+          "id": "e7",
+          "source": "product-service",
+          "target": "redis",
+          "label": "Cache",
+          "animated": true,
+          "type": "smoothstep"
+        },
+        {
+          "id": "e8",
+          "source": "user-service",
+          "target": "rabbitmq",
+          "label": "Events",
+          "animated": true,
+          "type": "smoothstep"
+        },
+        {
+          "id": "e9",
+          "source": "order-service",
+          "target": "rabbitmq",
+          "label": "Events",
+          "animated": true,
+          "type": "smoothstep"
+        },
+        {
+          "id": "e10",
+          "source": "product-service",
+          "target": "elasticsearch",
+          "label": "Sync",
+          "animated": true,
+          "type": "smoothstep"
+        }
+      ]
+    }
+  },
+  "api": {
+    "baseUrl": "https://api.example.com",
+    "endpoints": [
+      {
+        "id": "get-products",
+        "name": "Get Products",
+        "description": "Retrieve paginated list of products with optional filtering",
+        "method": "GET",
+        "path": "/v1/products",
+        "headers": [
+          {
+            "key": "Authorization",
+            "value": "Bearer YOUR_TOKEN_HERE",
+            "required": true
+          }
+        ],
+        "flowVisualization": {
+          "nodeSequence": ["api-gateway", "product-service", "redis", "postgres", "elasticsearch"],
+          "timing": {
+            "api-gateway": 500,
+            "product-service": 1000,
+            "redis": 1500,
+            "postgres": 2000,
+            "elasticsearch": 2500
+          }
+        }
+      },
+      {
+        "id": "create-user",
+        "name": "Create User",
+        "description": "Register a new user account",
+        "method": "POST",
+        "path": "/v1/users",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "required": true
+          }
+        ],
+        "body": {
+          "type": "json",
+          "example": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"SecureP@ss123\",\n  \"name\": \"John Doe\"\n}"
+        },
+        "flowVisualization": {
+          "nodeSequence": ["api-gateway", "user-service", "postgres", "rabbitmq"],
+          "timing": {
+            "api-gateway": 500,
+            "user-service": 1000,
+            "postgres": 1800,
+            "rabbitmq": 2300
+          }
+        }
+      }
+    ]
+  },
+  "github": "https://github.com/username/microservices-platform",
+  "publishedAt": "2025-10-15"
+}

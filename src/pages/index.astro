@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Backend Engineer Portfolio">
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-accent-blue to-purple-500 bg-clip-text text-transparent">
+        Backend Engineer
+      </h1>
+      <p class="text-xl md:text-2xl text-text-secondary mb-8">
+        Building scalable systems with clean architecture
+      </p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <a
+          href="/projects"
+          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium"
+        >
+          View Projects
+        </a>
+        <a
+          href="/about"
+          class="px-6 py-3 bg-surface-secondary text-text-primary rounded-xl hover:bg-surface-primary transition-all duration-200 font-medium border border-border-primary"
+        >
+          About Me
+        </a>
+      </div>
+
+      <!-- Test design system colors -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 bg-surface-primary border border-border-primary rounded-lg">
+          <div class="w-12 h-12 bg-accent-blue rounded-full mx-auto mb-2"></div>
+          <p class="text-sm text-text-secondary">Accent Blue</p>
+        </div>
+        <div class="p-4 bg-surface-secondary border border-border-primary rounded-lg">
+          <div class="w-12 h-12 bg-status-success rounded-full mx-auto mb-2"></div>
+          <p class="text-sm text-text-secondary">Success</p>
+        </div>
+        <div class="p-4 bg-surface-primary border border-border-primary rounded-lg">
+          <div class="w-12 h-12 bg-status-warning rounded-full mx-auto mb-2"></div>
+          <p class="text-sm text-text-secondary">Warning</p>
+        </div>
+        <div class="p-4 bg-surface-secondary border border-border-primary rounded-lg">
+          <div class="w-12 h-12 bg-status-error rounded-full mx-auto mb-2"></div>
+          <p class="text-sm text-text-secondary">Error</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

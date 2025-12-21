@@ -1,0 +1,104 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ArchitectureDiagram } from '../components/react/diagram/ArchitectureDiagram';
+import { EndpointTabs } from '../components/react/api/EndpointTabs';
+import { ThemeToggle } from '../components/react/ui/ThemeToggle';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// Load the example project data from the public directory
+const projectPath = join(process.cwd(), 'public', 'data', 'projects', 'microservices-platform.json');
+const projectData = readFileSync(projectPath, 'utf-8');
+const project = JSON.parse(projectData);
+---
+
+<Layout title="Demo - Interactive Components">
+  <div class="min-h-screen px-4 py-8">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header with Theme Toggle -->
+      <div class="flex justify-between items-start mb-8">
+        <div>
+          <a
+            href="/"
+            class="inline-flex items-center text-text-secondary hover:text-accent-blue transition-all duration-200 mb-4"
+          >
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Home
+          </a>
+          <h1 class="text-4xl font-bold mb-2">{project.title}</h1>
+          <p class="text-xl text-text-secondary">{project.longDescription}</p>
+
+          <!-- Technologies -->
+          <div class="flex flex-wrap gap-2 mt-4">
+            {project.technologies.map((tech: string) => (
+              <span class="px-3 py-1 bg-surface-secondary text-text-primary text-sm rounded-lg border border-border-primary">
+                {tech}
+              </span>
+            ))}
+          </div>
+        </div>
+        <ThemeToggle client:load />
+      </div>
+
+      <!-- Architecture Diagram Section -->
+      {project.diagrams.architecture && (
+        <section class="mb-12">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-2">Architecture Diagram</h2>
+            <p class="text-text-secondary">
+              Click on any node to see detailed information about that component
+            </p>
+          </div>
+          <ArchitectureDiagram
+            diagram={project.diagrams.architecture}
+            client:visible
+          />
+        </section>
+      )}
+
+      <!-- API Testing Section -->
+      {project.api && project.api.endpoints.length > 0 && (
+        <section class="mb-12">
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-2">API Testing</h2>
+            <p class="text-text-secondary">
+              Test endpoints and see the request flow through the system
+            </p>
+          </div>
+
+          <EndpointTabs
+            endpoints={project.api.endpoints}
+            diagramNodes={project.diagrams.architecture.nodes}
+            diagramEdges={project.diagrams.architecture.edges}
+            client:load
+          />
+        </section>
+      )}
+
+      <!-- Project Links -->
+      <section class="mt-16 p-8 bg-surface-primary border border-border-primary rounded-2xl">
+        <h3 class="text-xl font-bold mb-4">Project Links</h3>
+        <div class="flex gap-4 flex-wrap">
+          {project.github && (
+            <a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="px-6 py-3 bg-surface-secondary text-text-primary rounded-xl hover:bg-accent-blue hover:text-white transition-all duration-200 font-medium border border-border-primary"
+            >
+              View on GitHub
+            </a>
+          )}
+          <a
+            href="/projects"
+            class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium"
+          >
+            View All Projects
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>
