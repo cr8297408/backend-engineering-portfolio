@@ -25,134 +25,99 @@ const skills = {
   <!-- Navbar -->
   <Navbar client:load />
 
-  <!-- Hero Section with Background GIF -->
-  <section class="relative min-h-screen flex items-center justify-center px-4 pt-16 overflow-hidden">
-    <!-- Background GIF -->
+  <!-- Hero Section -->
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Video -->
     <div class="absolute inset-0 z-0">
       <video
         src="/background.mp4"
         autoplay
         loop
         muted
+        playsinline
         class="w-full h-full object-cover"
       />
-      <!-- Overlay gradient for better text readability -->
-      <div class="absolute inset-0 bg-gradient-to-b from-bg-primary/50 via-bg-primary/70 to-bg-primary"></div>
     </div>
 
     <!-- Content -->
-    <div class="relative z-10 max-w-4xl mx-auto text-center">
-      <h1 class="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-accent-blue to-purple-500 bg-clip-text text-transparent">
-        Backend Engineer
+    <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
+      <h1 class="text-6xl md:text-7xl lg:text-8xl font-medium mb-8 text-white tracking-tight">
+        Backend<br/>Engineer
       </h1>
-      <p class="text-xl md:text-2xl text-text-secondary mb-4">
-        Building scalable, resilient systems with clean architecture
+      <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
+        Where scalable systems and clean<br class="hidden md:block"/> architecture come together
       </p>
-      <p class="text-base text-text-tertiary mb-8 max-w-2xl mx-auto">
-        Specializing in microservices, distributed systems, and high-performance APIs.
-        Passionate about event-driven architectures and infrastructure as code.
+      <a
+        href="#projects"
+        class="inline-block px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20 backdrop-blur-sm"
+      >
+        View Projects
+      </a>
+      <p class="mt-6 text-sm text-white/50">
+        <a href="#about" class="hover:text-white/80 transition-colors underline underline-offset-4">Learn more about me</a>
       </p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a
-          href="#projects"
-          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
-        >
-          View Projects
-        </a>
-        <a
-          href="#contact"
-          class="px-6 py-3 bg-surface-secondary text-text-primary rounded-xl hover:bg-surface-primary transition-all duration-200 font-medium border border-border-primary"
-        >
-          Get in Touch
-        </a>
-      </div>
     </div>
 
-    <!-- Bottom blur effect -->
-    <div class="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-bg-primary via-bg-primary/80 to-transparent backdrop-blur-md z-20"></div>
+    <!-- Bottom gradient fade -->
+    <div class="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black to-transparent z-20 pointer-events-none"></div>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="py-20 px-4 bg-bg-primary">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-8 text-center">
-        About Me
+  <section id="about" class="py-32 px-4 bg-black">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">
+        I'm a backend engineer with a passion<br class="hidden md:block"/> for building robust, scalable systems.
       </h2>
-      <div class="bg-surface-secondary/50 border border-border-primary rounded-2xl p-8 md:p-12 backdrop-blur-sm">
-        <p class="text-lg text-text-secondary mb-6">
-          I'm a backend engineer with a passion for building robust, scalable systems that power
-          modern applications. My expertise lies in designing and implementing microservices
-          architectures, event-driven systems, and high-performance APIs.
-        </p>
-        <p class="text-lg text-text-secondary mb-6">
-          I believe in writing clean, maintainable code and following best practices like DDD,
-          CQRS, and event sourcing. I'm experienced in deploying and managing containerized
-          applications on Kubernetes, implementing CI/CD pipelines, and maintaining
-          infrastructure as code.
-        </p>
-        <p class="text-lg text-text-secondary">
-          When I'm not coding, I enjoy contributing to open source, writing technical articles,
-          and exploring new technologies in the backend ecosystem.
-        </p>
-      </div>
+      <p class="text-lg md:text-xl text-white/60 leading-relaxed">
+        My expertise lies in designing microservices architectures, event-driven systems, 
+        and high-performance APIs. I believe in clean code, DDD, and infrastructure as code.
+      </p>
     </div>
   </section>
 
   <!-- Skills Section -->
-  <section id="skills" class="py-20 px-4 bg-bg-secondary">
+  <section id="skills" class="py-24 px-4 bg-black">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-12 text-center">
+      <h2 class="text-3xl md:text-4xl font-medium text-white mb-16 text-center">
         Technical Skills
       </h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Languages & Frameworks -->
-        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
-          <h3 class="text-xl font-semibold text-text-primary mb-4">Languages</h3>
-          <div class="space-y-2">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-medium text-white mb-6">Languages</h3>
+          <div class="space-y-3">
             {skills.languages.map((skill) => (
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-accent-blue rounded-full"></div>
-                <span class="text-text-secondary">{skill}</span>
-              </div>
+              <p class="text-white/60">{skill}</p>
             ))}
           </div>
         </div>
 
         <!-- Databases -->
-        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
-          <h3 class="text-xl font-semibold text-text-primary mb-4">Databases</h3>
-          <div class="space-y-2">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-medium text-white mb-6">Databases</h3>
+          <div class="space-y-3">
             {skills.databases.map((skill) => (
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-status-success rounded-full"></div>
-                <span class="text-text-secondary">{skill}</span>
-              </div>
+              <p class="text-white/60">{skill}</p>
             ))}
           </div>
         </div>
 
         <!-- Infrastructure -->
-        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
-          <h3 class="text-xl font-semibold text-text-primary mb-4">Infrastructure</h3>
-          <div class="space-y-2">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-medium text-white mb-6">Infrastructure</h3>
+          <div class="space-y-3">
             {skills.infrastructure.map((skill) => (
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-status-warning rounded-full"></div>
-                <span class="text-text-secondary">{skill}</span>
-              </div>
+              <p class="text-white/60">{skill}</p>
             ))}
           </div>
         </div>
 
         <!-- Patterns & Architecture -->
-        <div class="bg-surface-secondary/80 border border-border-primary rounded-2xl p-6 backdrop-blur-sm hover:bg-surface-secondary transition-all duration-300">
-          <h3 class="text-xl font-semibold text-text-primary mb-4">Architecture</h3>
-          <div class="space-y-2">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-medium text-white mb-6">Architecture</h3>
+          <div class="space-y-3">
             {skills.patterns.map((skill) => (
-              <div class="flex items-center gap-2">
-                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
-                <span class="text-text-secondary">{skill}</span>
-              </div>
+              <p class="text-white/60">{skill}</p>
             ))}
           </div>
         </div>
@@ -161,18 +126,18 @@ const skills = {
   </section>
 
   <!-- Projects Section -->
-  <section id="projects" class="py-20 px-4 bg-bg-primary">
+  <section id="projects" class="py-24 px-4 bg-neutral-950">
     <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-4">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-medium text-white mb-4">
           Featured Projects
         </h2>
-        <p class="text-lg text-text-secondary">
+        <p class="text-lg text-white/60">
           Explore my work building scalable systems and architectures
         </p>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <div class="grid md:grid-cols-2 gap-8 mb-12">
         {projects.map((project) => (
           <ProjectCard
             title={project.title}
@@ -189,7 +154,7 @@ const skills = {
       <div class="text-center">
         <a
           href="/projects"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-surface-primary text-accent-blue rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-accent-blue"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
           View All Projects
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,19 +166,18 @@ const skills = {
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="py-20 px-4 bg-bg-secondary">
+  <section id="contact" class="py-32 px-4 bg-black">
     <div class="max-w-3xl mx-auto text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-text-primary mb-6">
+      <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-6">
         Let's Work Together
       </h2>
-      <p class="text-lg text-text-secondary mb-8">
-        Interested in collaborating or have a project in mind? Let's discuss how we can build
-        something great together.
+      <p class="text-lg text-white/60 mb-12">
+        Interested in collaborating or have a project in mind?<br class="hidden md:block"/> Let's discuss how we can build something great together.
       </p>
       <div class="flex gap-4 justify-center flex-wrap">
         <a
           href="mailto:your.email@example.com"
-          class="px-6 py-3 bg-accent-blue text-white rounded-xl hover:bg-accent-blueHover transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+          class="px-8 py-4 bg-white text-black rounded-full hover:bg-white/90 transition-all duration-300 font-medium"
         >
           Send Email
         </a>
@@ -221,15 +185,15 @@ const skills = {
           href="https://github.com/yourusername"
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 bg-surface-primary text-text-primary rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-border-primary"
+          class="px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
-          GitHub Profile
+          GitHub
         </a>
         <a
           href="https://linkedin.com/in/yourprofile"
           target="_blank"
           rel="noopener noreferrer"
-          class="px-6 py-3 bg-surface-primary text-text-primary rounded-xl hover:bg-surface-secondary transition-all duration-200 font-medium border border-border-primary"
+          class="px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
           LinkedIn
         </a>
@@ -238,8 +202,8 @@ const skills = {
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 px-4 border-t border-border-primary bg-bg-primary">
-    <div class="max-w-6xl mx-auto text-center text-text-tertiary text-sm">
+  <footer class="py-8 px-4 bg-black border-t border-white/10">
+    <div class="max-w-6xl mx-auto text-center text-white/40 text-sm">
       <p>© {new Date().getFullYear()} Backend Engineer Portfolio. Built with Astro and React.</p>
     </div>
   </footer>
