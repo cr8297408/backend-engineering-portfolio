@@ -29,7 +29,7 @@ export const ArchitectureDiagram: React.FC<Props> = ({ diagram }) => {
   }, []);
 
   return (
-    <div className="w-full h-[600px] rounded-2xl overflow-hidden border-2 border-border-primary bg-background-secondary">
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/10 bg-neutral-900">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -40,23 +40,23 @@ export const ArchitectureDiagram: React.FC<Props> = ({ diagram }) => {
         fitView
         minZoom={0.5}
         maxZoom={1.5}
-        className="bg-background-secondary"
+        className="bg-neutral-900"
         proOptions={{ hideAttribution: true }}
       >
         <Background
-          color="var(--color-border-secondary)"
+          color="rgba(255,255,255,0.1)"
           gap={16}
           size={1}
         />
         <Controls
-          className="bg-surface-primary border border-border-primary rounded-xl shadow-md"
+          className="bg-neutral-800 border border-white/10 rounded-xl shadow-lg [&>button]:bg-neutral-800 [&>button]:border-white/10 [&>button]:text-white [&>button:hover]:bg-neutral-700"
         />
         <MiniMap
-          className="bg-surface-secondary border border-border-primary rounded-lg"
+          className="bg-neutral-800 border border-white/10 rounded-lg"
           nodeBorderRadius={8}
           nodeColor={(node) => {
-            if (node.selected) return 'var(--color-accent-blue)';
-            return 'var(--color-surface-primary)';
+            if (node.selected) return '#3b82f6';
+            return '#262626';
           }}
         />
       </ReactFlow>
