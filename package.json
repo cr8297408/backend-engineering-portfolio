@@ -11,7 +11,7 @@
   "dependencies": {
     "@astrojs/react": "^4.4.2",
     "@astrojs/tailwind": "^6.0.2",
-    "@smart-coder-labs/design-system": "file:../packages/design-system",
+    "@smart-coder-labs/design-system": "^1.0.6",
     "@xyflow/react": "^12.10.0",
     "astro": "^5.16.6",
     "framer-motion": "^12.23.26",
