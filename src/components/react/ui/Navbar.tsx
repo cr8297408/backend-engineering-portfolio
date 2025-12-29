@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
             href="/"
             className="text-xl font-bold text-white hover:text-white/80 transition-colors duration-200"
           >
-            Backend Dev
+            Cesar Ruiz
           </a>
 
           {/* Desktop Navigation */}
