@@ -1,16 +1,18 @@
 ---
-import '@smart-coder-labs/design-system/globals.css';
-import '../styles/global.css';
+import "../styles/global.css";
 
 interface Props {
   title: string;
   description?: string;
 }
 
-const { title, description = 'Backend Engineer Portfolio - Showcasing scalable systems and clean architecture' } = Astro.props;
+const {
+  title,
+  description = "Backend Engineer Portfolio - Showcasing scalable systems and clean architecture",
+} = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />

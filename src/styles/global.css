@@ -1,4 +1,27 @@
+@import './apple-ds.css';
 @import '@xyflow/react/dist/style.css';
+@import "tailwindcss";
+
+@theme {
+  --color-bg-primary: hsl(220, 26%, 14%);
+  --color-bg-secondary: hsl(220, 26%, 18%);
+  --color-surface-primary: hsl(220, 26%, 18%);
+  --color-surface-secondary: hsl(220, 26%, 22%);
+  --color-border-primary: hsl(220, 26%, 28%);
+  --color-border-secondary: hsl(220, 26%, 24%);
+
+  /* Animation */
+  --animate-dashdraw: dashdraw 0.5s linear infinite;
+
+  @keyframes dashdraw {
+      0% {
+        stroke-dashoffset: 10;
+      }
+      100% {
+        stroke-dashoffset: 0;
+      }
+  }
+}
 
 /* Dark mode variable overrides - ensure proper contrast */
 html.dark {
