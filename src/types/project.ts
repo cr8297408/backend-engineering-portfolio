@@ -8,6 +8,11 @@ export interface ProjectDiagrams {
   infrastructure?: DiagramData;
 }
 
+export interface KeyFeature {
+  title: string;
+  description: string;
+}
+
 export interface Project {
   id: string;
   slug: string;
@@ -18,6 +23,7 @@ export interface Project {
   status: ProjectStatus;
   featured?: boolean;
   diagrams?: ProjectDiagrams;
+  keyFeatures?: KeyFeature[];
   api?: APIConfig;
   github?: string;
   demo?: string;

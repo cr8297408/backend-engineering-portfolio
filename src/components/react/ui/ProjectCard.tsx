@@ -1,4 +1,6 @@
 import React from 'react';
+import { withBase } from '../../../lib/paths';
+import type { DiagramData } from '../../../types/diagram';
 
 interface ProjectCardProps {
   title: string;
@@ -7,61 +9,117 @@ interface ProjectCardProps {
   slug: string;
   featured?: boolean;
   github?: string;
-  image?: string;
+  diagram?: DiagramData;
 }
+
+/** Custom nodes render at roughly 200x120, so this is their visual centre. */
+const NODE_W = 200;
+const NODE_H = 120;
+
+/**
+ * Miniature of the project's real architecture diagram — same node positions
+ * and edges the detail page renders interactively, normalised into a small
+ * viewBox. It carries actual information about the system, which a decorative
+ * thumbnail does not.
+ */
+const TopologyPreview: React.FC<{ diagram: DiagramData }> = ({ diagram }) => {
+  const points = new Map(
+    diagram.nodes.map((n) => [n.id, { x: n.position.x + NODE_W / 2, y: n.position.y + NODE_H / 2 }])
+  );
+  const xs = [...points.values()].map((p) => p.x);
+  const ys = [...points.values()].map((p) => p.y);
+
+  const pad = 45;
+  const minX = Math.min(...xs) - pad;
+  const minY = Math.min(...ys) - pad;
+  // Guard against a degenerate box when every node shares a coordinate.
+  const width = Math.max(Math.max(...xs) - minX + pad, 1);
+  const height = Math.max(Math.max(...ys) - minY + pad, 1);
+
+  return (
+    <svg
+      viewBox={`${minX} ${minY} ${width} ${height}`}
+      preserveAspectRatio="xMidYMid meet"
+      className="absolute inset-0 h-full w-full"
+      aria-hidden="true"
+    >
+      <g stroke="#3B82F6" strokeWidth={Math.max(width, height) / 230} opacity={0.35}>
+        {diagram.edges.map((edge) => {
+          const a = points.get(edge.source);
+          const b = points.get(edge.target);
+          if (!a || !b) return null;
+          return <line key={edge.id} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />;
+        })}
+      </g>
+      <g fill="#93C5FD">
+        {diagram.nodes.map((node) => {
+          const p = points.get(node.id)!;
+          return (
+            <circle
+              key={node.id}
+              cx={p.x}
+              cy={p.y}
+              r={Math.max(width, height) / 72}
+              opacity={node.type === 'database' || node.type === 'queue' ? 0.95 : 0.7}
+            />
+          );
+        })}
+      </g>
+    </svg>
+  );
+};
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   title,
   description,
   technologies,
   slug,
-  image,
+  diagram,
 }) => {
-  // Generate a gradient based on the title for projects without images
-  const getGradient = (str: string) => {
-    const gradients = [
-      'from-blue-600 via-purple-600 to-pink-500',
-      'from-emerald-500 via-teal-500 to-cyan-500',
-      'from-orange-500 via-red-500 to-pink-500',
-      'from-violet-600 via-purple-600 to-indigo-600',
-      'from-amber-500 via-orange-500 to-yellow-500',
-      'from-cyan-500 via-blue-500 to-indigo-500',
-    ];
-    const index = str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % gradients.length;
-    return gradients[index];
-  };
+  const shown = technologies.slice(0, 3);
+  const rest = technologies.length - shown.length;
 
   return (
     <a
-      href={`/projects/${slug}`}
-      className="group block"
+      href={withBase(`/projects/${slug}`)}
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors duration-200 hover:border-white/25 hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
     >
-      {/* Image/Thumbnail Container */}
-      <div className="relative aspect-video rounded-2xl overflow-hidden mb-4 bg-neutral-900">
-        {image ? (
-          <img
-            src={image}
-            alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+      <div className="relative aspect-[16/10] shrink-0 overflow-hidden border-b border-white/10 bg-[#06080e]">
+        {diagram ? (
+          <TopologyPreview diagram={diagram} />
         ) : (
-          <div className={`w-full h-full bg-gradient-to-br ${getGradient(title)} opacity-80`}>
-            {/* Tech icons overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-white/20 text-6xl font-bold">
-                {title.charAt(0)}
-              </div>
-            </div>
-          </div>
+          <div
+            className="absolute inset-0 opacity-40"
+            style={{
+              backgroundImage:
+                'radial-gradient(circle at center, rgba(147,197,253,0.35) 1px, transparent 1px)',
+              backgroundSize: '22px 22px',
+            }}
+            aria-hidden="true"
+          />
         )}
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#06080e] via-transparent to-transparent" />
       </div>
 
-      {/* Title */}
-      <h3 className="text-sm font-medium text-white/80 text-center tracking-wide uppercase group-hover:text-white transition-colors duration-200">
-        {title}
-      </h3>
+      <div className="flex flex-1 flex-col p-5">
+        <h3 className="text-base font-medium text-white transition-colors duration-200 group-hover:text-blue-200">
+          {title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/50">{description}</p>
+        <ul className="mt-4 flex flex-wrap gap-1.5 pt-1">
+          {shown.map((tech) => (
+            <li
+              key={tech}
+              className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-[11px] text-white/60"
+            >
+              {tech}
+            </li>
+          ))}
+          {rest > 0 && (
+            <li className="px-1 py-1 text-[11px] text-white/35">+{rest}</li>
+          )}
+        </ul>
+      </div>
     </a>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { withBase, isHomePath } from '../../../lib/paths';
 
 export const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -12,7 +13,7 @@ export const Navbar: React.FC = () => {
     };
 
     // Check if we're on the home page
-    setIsHomePage(window.location.pathname === '/');
+    setIsHomePage(isHomePath(window.location.pathname));
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -20,10 +21,10 @@ export const Navbar: React.FC = () => {
 
   // Use full paths when not on home page
   const navLinks = [
-    { href: isHomePage ? '#about' : '/#about', label: 'About' },
-    { href: isHomePage ? '#projects' : '/#projects', label: 'Projects' },
-    { href: isHomePage ? '#skills' : '/#skills', label: 'Skills' },
-    { href: isHomePage ? '#contact' : '/#contact', label: 'Contact' },
+    { href: isHomePage ? '#about' : withBase('/#about'), label: 'About' },
+    { href: isHomePage ? '#projects' : withBase('/#projects'), label: 'Projects' },
+    { href: isHomePage ? '#skills' : withBase('/#skills'), label: 'Skills' },
+    { href: isHomePage ? '#contact' : withBase('/#contact'), label: 'Contact' },
   ];
 
   return (
@@ -38,7 +39,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <a
-            href="/"
+            href={withBase("/")}
             className="text-xl font-bold text-white hover:text-white/80 transition-colors duration-200"
           >
             Cesar Ruiz

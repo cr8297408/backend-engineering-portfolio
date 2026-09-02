@@ -1,0 +1,211 @@
+{
+  "id": "agency-os",
+  "slug": "agency-os",
+  "title": "Agency OS",
+  "description": "Multi-agent orchestration platform that runs the software lifecycle with specialised AI agents",
+  "longDescription": "A two-part system: a TypeScript core that owns agent lifecycle, tool execution and persistence, and a Next.js 15 control tower for watching it work. Specialised agents (PM, Architect, Dev, QA, UI) collaborate in a shared workspace through pipelines that move a project from discovery to deployment. Designed MCP-ready so agent capabilities extend without touching the core.",
+  "technologies": [
+    "TypeScript",
+    "Next.js 15",
+    "React 19",
+    "Prisma 7",
+    "NestJS CLI",
+    "Gemini 2.x",
+    "MCP",
+    "Docker"
+  ],
+  "status": "in-progress",
+  "featured": true,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "dashboard",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 0
+          },
+          "data": {
+            "label": "Web Dashboard",
+            "icon": "service",
+            "description": "The control tower \u2014 real-time agent monitoring",
+            "details": "Next.js 15 interface for watching agent execution live, inspecting produced artifacts and screenshots, managing user stories and tasks, and monitoring deployments. It observes the core; it does not drive it.",
+            "technologies": [
+              "Next.js 15",
+              "React 19",
+              "TypeScript"
+            ]
+          }
+        },
+        {
+          "id": "orchestrator",
+          "type": "api",
+          "position": {
+            "x": 430,
+            "y": 210
+          },
+          "data": {
+            "label": "Agency Core",
+            "icon": "gateway",
+            "description": "Agent lifecycle, state and pipeline execution",
+            "details": "The brain. Owns which agent runs when, how state transitions between discovery, planning and execution phases, and how partial failures are retried. Written in TypeScript/Node so agents and tools share one type system.",
+            "technologies": [
+              "TypeScript",
+              "Node.js",
+              "Agentic pipelines"
+            ]
+          }
+        },
+        {
+          "id": "agents",
+          "type": "service",
+          "position": {
+            "x": 60,
+            "y": 430
+          },
+          "data": {
+            "label": "Specialised Agents",
+            "icon": "users",
+            "description": "PM \u00b7 Architect \u00b7 Dev \u00b7 QA \u00b7 UI",
+            "details": "Each agent has a narrow role and a distinct prompt contract, working over a shared workspace. Narrow roles are the point: a single generalist agent degrades on long pipelines, whereas a QA agent that only reviews stays reliable.",
+            "technologies": [
+              "Role-scoped prompts",
+              "Shared workspace"
+            ]
+          }
+        },
+        {
+          "id": "tools",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 430
+          },
+          "data": {
+            "label": "Tool Layer",
+            "icon": "custom",
+            "description": "Filesystem, Git, test runners",
+            "details": "The only way an agent touches the world. Centralising execution here is what makes agent actions auditable and constrainable, instead of scattering shell calls through prompt logic.",
+            "technologies": [
+              "Filesystem",
+              "Git",
+              "Test runners",
+              "MCP-ready"
+            ]
+          }
+        },
+        {
+          "id": "llm",
+          "type": "external",
+          "position": {
+            "x": 800,
+            "y": 430
+          },
+          "data": {
+            "label": "LLM Provider",
+            "icon": "cloud",
+            "description": "Gemini 2.x Pro / Ultra",
+            "details": "Accessed behind an adapter so the model choice is a configuration concern, not an architectural one.",
+            "technologies": [
+              "Gemini 2.x",
+              "Provider adapter"
+            ]
+          }
+        },
+        {
+          "id": "db",
+          "type": "database",
+          "position": {
+            "x": 430,
+            "y": 650
+          },
+          "data": {
+            "label": "Prisma / Database",
+            "icon": "database",
+            "description": "Projects, runs and logs",
+            "details": "Prisma 7 schema persisting project state, pipeline runs and agent logs. Durable run history is what makes a failed pipeline debuggable after the fact rather than only while it is running.",
+            "technologies": [
+              "Prisma 7",
+              "Migrations",
+              "Dockerized"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "dashboard",
+          "target": "orchestrator",
+          "label": "monitor / command",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2",
+          "source": "orchestrator",
+          "target": "agents",
+          "label": "dispatch phase",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e3",
+          "source": "orchestrator",
+          "target": "tools",
+          "label": "execute",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "agents",
+          "target": "tools",
+          "label": "tool calls",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "orchestrator",
+          "target": "llm",
+          "label": "completions",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e6",
+          "source": "orchestrator",
+          "target": "db",
+          "label": "persist runs",
+          "type": "step"
+        },
+        {
+          "id": "e7",
+          "source": "tools",
+          "target": "db",
+          "label": "artifacts + logs",
+          "type": "step"
+        }
+      ]
+    }
+  },
+  "github": "https://github.com/smart-coder-labs/agency-os",
+  "publishedAt": "2026-07-11",
+  "keyFeatures": [
+    {
+      "title": "Narrow agents beat one generalist",
+      "description": "PM, Architect, Dev, QA and UI agents each own a role and a prompt contract over a shared workspace. A single generalist degrades on long pipelines; a QA agent that only reviews stays reliable."
+    },
+    {
+      "title": "One centralised tool layer",
+      "description": "Filesystem, Git and test execution live in a single layer instead of scattered through prompt logic, which is what makes agent actions auditable and constrainable."
+    },
+    {
+      "title": "Durable run history",
+      "description": "Prisma persists projects, pipeline runs and agent logs, so a failed pipeline is debuggable after the fact and not only while it is running."
+    },
+    {
+      "title": "MCP-ready by design",
+      "description": "Agent capabilities extend through the Model Context Protocol without changes to the orchestration core."
+    }
+  ]
+}

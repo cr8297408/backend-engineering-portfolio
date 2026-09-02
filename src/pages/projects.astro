@@ -2,16 +2,16 @@
 import Layout from '../layouts/Layout.astro';
 import { Navbar } from '../components/react/ui/Navbar';
 import { ProjectCard } from '../components/react/ui/ProjectCard';
+import { withBase } from '../lib/paths';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 // Load all projects
 const projectsDir = join(process.cwd(), 'public', 'data', 'projects');
 const projectFiles = readdirSync(projectsDir).filter(f => f.endsWith('.json'));
-const projects = projectFiles.map(file => {
-  const content = readFileSync(join(projectsDir, file), 'utf-8');
-  return JSON.parse(content);
-});
+const projects = projectFiles
+  .map(file => JSON.parse(readFileSync(join(projectsDir, file), 'utf-8')))
+  .sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)));
 ---
 
 <Layout title="All Projects - Backend Engineer Portfolio">
@@ -35,13 +35,13 @@ const projects = projectFiles.map(file => {
         {projects.map((project) => (
           <ProjectCard
             title={project.title}
-            description={project.longDescription}
+            description={project.description}
             technologies={project.technologies}
             slug={project.slug}
             featured={project.featured}
             github={project.github}
-            image={project.image}
-            client:load
+            diagram={project.diagrams?.architecture}
+            client:visible
           />
         ))}
       </div>
@@ -49,7 +49,7 @@ const projects = projectFiles.map(file => {
       <!-- Back to Home -->
       <div class="text-center">
         <a
-          href="/"
+          href={withBase("/")}
           class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

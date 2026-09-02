@@ -1,0 +1,616 @@
+{
+  "id": "nexusmind",
+  "slug": "nexusmind",
+  "title": "NexusMind",
+  "description": "Multi-tenant memory control plane for AI engineering teams, with an MCP server as the front door",
+  "longDescription": "A Rust + Axum control plane that gives AI coding tools (Claude Code, Cursor, any MCP client) a shared, auditable team memory. Every developer gets a scoped API key; every store, search and delete is written to an audit trail. Ships with a TypeScript MCP server, a React admin panel, and single-command Docker Compose deployment.",
+  "technologies": [
+    "Rust",
+    "Axum",
+    "SQLite",
+    "TypeScript",
+    "MCP",
+    "React 19",
+    "Vite",
+    "TanStack Query",
+    "Docker"
+  ],
+  "status": "in-progress",
+  "featured": true,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "mcp-clients",
+          "type": "external",
+          "position": {
+            "x": 430,
+            "y": 0
+          },
+          "data": {
+            "label": "MCP Clients",
+            "icon": "external",
+            "description": "Claude Code, Cursor, Copilot \u2014 any MCP-compatible tool",
+            "details": "Agents talk to NexusMind through the Model Context Protocol over stdio. The client never sees the database or the API key of another tenant \u2014 it only knows the tools exposed by the MCP server.",
+            "technologies": [
+              "Claude Code",
+              "Cursor",
+              "MCP stdio"
+            ]
+          }
+        },
+        {
+          "id": "admin-panel",
+          "type": "service",
+          "position": {
+            "x": 40,
+            "y": 200
+          },
+          "data": {
+            "label": "Admin Panel",
+            "icon": "service",
+            "description": "Browse memories, manage users, inspect the audit log",
+            "details": "React 19 + Vite 5 + Tailwind v4 SPA using TanStack Query v5 for server-state. Read-heavy: memory browser, user management, per-org settings and audit inspection without touching SQL.",
+            "technologies": [
+              "React 19",
+              "Vite 5",
+              "Tailwind v4",
+              "TanStack Query v5"
+            ]
+          }
+        },
+        {
+          "id": "mcp-server",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 200
+          },
+          "data": {
+            "label": "MCP Server",
+            "icon": "service",
+            "description": "Translates MCP tool calls into REST calls",
+            "details": "TypeScript server built on @modelcontextprotocol/sdk. Exposes store_memory, search_memories, get_context, record_decision and the SDD/task tools. Stateless \u2014 it forwards the developer's API key to the backend and returns typed results.",
+            "technologies": [
+              "TypeScript",
+              "@modelcontextprotocol/sdk",
+              "stdio transport"
+            ]
+          }
+        },
+        {
+          "id": "auth",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 400
+          },
+          "data": {
+            "label": "Auth Middleware",
+            "icon": "gateway",
+            "description": "API key per user, scoped to an organization",
+            "details": "Axum middleware layer. Cookie-first extraction with a `Authorization: Bearer nm_\u2026` fallback. Resolves the key to a (user, org) pair and injects the tenant scope into every downstream query, so cross-tenant reads are impossible by construction rather than by convention.",
+            "technologies": [
+              "Axum middleware",
+              "Bearer tokens",
+              "Hashed API keys"
+            ]
+          }
+        },
+        {
+          "id": "rest-api",
+          "type": "api",
+          "position": {
+            "x": 430,
+            "y": 600
+          },
+          "data": {
+            "label": "REST API",
+            "icon": "api",
+            "description": "Rust + Axum core \u2014 memories, context, SDD, tasks, policy",
+            "details": "Modular router split by domain: memory, context, search, conventions, tasks, sdd, harnesses, policy, usage, admin. Each module owns its routes and handlers, which keeps the surface auditable as it grows past 200 endpoints.",
+            "technologies": [
+              "Rust",
+              "Axum 0.7",
+              "Tower",
+              "Serde"
+            ],
+            "metrics": {
+              "port": "8080",
+              "health": "GET /v1/health"
+            }
+          }
+        },
+        {
+          "id": "embeddings",
+          "type": "service",
+          "position": {
+            "x": 60,
+            "y": 820
+          },
+          "data": {
+            "label": "Embedding Indexer",
+            "icon": "zap",
+            "description": "Semantic search over team memories and code",
+            "details": "Background indexer that embeds memory content and repository symbols so search_memories and locate_code can rank by meaning instead of keywords. Ranked matches are filtered by tenant before they leave the process.",
+            "technologies": [
+              "Rust",
+              "Vector embeddings",
+              "Background workers"
+            ]
+          }
+        },
+        {
+          "id": "sqlite",
+          "type": "database",
+          "position": {
+            "x": 430,
+            "y": 820
+          },
+          "data": {
+            "label": "SQLite",
+            "icon": "database",
+            "description": "Single-file store, bundled \u2014 no external database to operate",
+            "details": "rusqlite with the bundled SQLite build, so the whole deployment is one binary plus one file. Schema migrations run at boot. Chosen deliberately over Postgres: the workload is read-heavy, per-tenant and small enough that operational simplicity beats horizontal scale.",
+            "technologies": [
+              "SQLite",
+              "rusqlite (bundled)",
+              "Boot-time migrations"
+            ]
+          }
+        },
+        {
+          "id": "audit",
+          "type": "service",
+          "position": {
+            "x": 800,
+            "y": 820
+          },
+          "data": {
+            "label": "Audit Trail",
+            "icon": "custom",
+            "description": "Every store, search and delete is logged",
+            "details": "Append-only record of who did what, from which tool, and when. This is the feature that makes shared AI memory acceptable to a team: an admin can always answer 'where did this convention come from?'.",
+            "technologies": [
+              "Append-only log",
+              "Per-org scoping"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "mcp-clients",
+          "target": "mcp-server",
+          "label": "MCP / stdio",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2",
+          "source": "mcp-server",
+          "target": "auth",
+          "label": "HTTP + Bearer",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3",
+          "source": "admin-panel",
+          "target": "auth",
+          "label": "HTTP + cookie",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "auth",
+          "target": "rest-api",
+          "label": "scoped (user, org)",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "rest-api",
+          "target": "sqlite",
+          "label": "SQL",
+          "type": "step"
+        },
+        {
+          "id": "e6",
+          "source": "rest-api",
+          "target": "embeddings",
+          "label": "index + rank",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e7",
+          "source": "rest-api",
+          "target": "audit",
+          "label": "append",
+          "type": "smoothstep",
+          "animated": true
+        }
+      ]
+    },
+    "infrastructure": {
+      "nodes": [
+        {
+          "id": "gh-actions",
+          "type": "service",
+          "position": {
+            "x": 40,
+            "y": 0
+          },
+          "data": {
+            "label": "GitHub Actions",
+            "icon": "custom",
+            "description": "Builds, tests and publishes the backend image",
+            "details": "ci.yml runs backend build, tests and clippy, the admin build and an MCP smoke test on every push. deploy.yml builds the arm64 backend image and pushes it to GHCR.",
+            "technologies": [
+              "GitHub Actions",
+              "cargo clippy",
+              "arm64 build"
+            ]
+          }
+        },
+        {
+          "id": "ghcr",
+          "type": "external",
+          "position": {
+            "x": 40,
+            "y": 220
+          },
+          "data": {
+            "label": "GHCR",
+            "icon": "cloud",
+            "description": "Container registry for the backend image",
+            "details": "Publishes ghcr.io/<owner>/nexusmind-backend:main-arm64. The host pulls by tag, so a deploy is a pull plus a container restart rather than a build on the box.",
+            "technologies": [
+              "GitHub Container Registry",
+              "OCI images"
+            ]
+          }
+        },
+        {
+          "id": "cloudflare",
+          "type": "external",
+          "position": {
+            "x": 800,
+            "y": 0
+          },
+          "data": {
+            "label": "Cloudflare DNS",
+            "icon": "cloud",
+            "description": "DNS plus the ACME DNS-01 challenge",
+            "details": "Caddy solves ACME over DNS-01 instead of HTTP-01, using a token scoped to Zone:DNS:Edit. That lets a valid certificate be issued for the API hostname while the A record still points at the old host \u2014 which is what makes the cutover zero-downtime: bring the new box fully up, validate it, then move DNS.",
+            "technologies": [
+              "Cloudflare DNS",
+              "ACME DNS-01",
+              "Scoped API token"
+            ]
+          }
+        },
+        {
+          "id": "caddy",
+          "type": "api",
+          "position": {
+            "x": 430,
+            "y": 220
+          },
+          "data": {
+            "label": "Caddy",
+            "icon": "gateway",
+            "description": "TLS termination and reverse proxy",
+            "details": "caddy-cloudflare 2.11.4. Terminates TLS for the public API hostname, compresses with zstd and gzip, and reverse-proxies to the backend container on port 8080.",
+            "technologies": [
+              "Caddy 2.11",
+              "Let's Encrypt",
+              "zstd + gzip"
+            ]
+          }
+        },
+        {
+          "id": "backend-container",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 440
+          },
+          "data": {
+            "label": "Backend container",
+            "icon": "service",
+            "description": "The Rust API, pulled by tag from GHCR",
+            "details": "Runs the Axum server on 8080. Not exposed to the internet directly \u2014 only Caddy reaches it, over the compose network.",
+            "technologies": [
+              "Rust",
+              "Axum",
+              "Docker Compose"
+            ]
+          }
+        },
+        {
+          "id": "volume",
+          "type": "database",
+          "position": {
+            "x": 430,
+            "y": 660
+          },
+          "data": {
+            "label": "nexusmind_data",
+            "icon": "database",
+            "description": "Named volume holding the SQLite file",
+            "details": "State lives in a named Docker volume, so the container is disposable: replacing it on deploy does not touch the database.",
+            "technologies": [
+              "Docker volume",
+              "SQLite"
+            ]
+          }
+        },
+        {
+          "id": "firebase",
+          "type": "external",
+          "position": {
+            "x": 830,
+            "y": 440
+          },
+          "data": {
+            "label": "Firebase Hosting",
+            "icon": "cloud",
+            "description": "Admin panel and landing, served as static sites",
+            "details": "Two hosting sites provisioned by Terraform. The SPAs are static and call the API across the public hostname, so the frontend deploy is fully decoupled from the backend one.",
+            "technologies": [
+              "Firebase Hosting",
+              "Terraform",
+              "Static SPA"
+            ]
+          }
+        },
+        {
+          "id": "terraform",
+          "type": "custom",
+          "position": {
+            "x": 40,
+            "y": 440
+          },
+          "data": {
+            "label": "Terraform",
+            "icon": "custom",
+            "description": "The GCP footprint as code",
+            "details": "Declares the Compute Engine instance, a persistent disk, a reserved static IP, HTTP and SSH firewall rules, an Artifact Registry repository and a service account scoped to read from it, plus both Firebase Hosting sites. Workload Identity Federation is scripted so CI authenticates without a long-lived key.",
+            "technologies": [
+              "Terraform",
+              "Compute Engine",
+              "Artifact Registry",
+              "Workload Identity Federation"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "i1",
+          "source": "gh-actions",
+          "target": "ghcr",
+          "label": "push image",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "i2",
+          "source": "ghcr",
+          "target": "backend-container",
+          "label": "pull by tag",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "i3",
+          "source": "cloudflare",
+          "target": "caddy",
+          "label": "A record",
+          "type": "smoothstep"
+        },
+        {
+          "id": "i4",
+          "source": "caddy",
+          "target": "cloudflare",
+          "label": "DNS-01 challenge",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "i5",
+          "source": "caddy",
+          "target": "backend-container",
+          "label": "reverse_proxy :8080",
+          "type": "step"
+        },
+        {
+          "id": "i6",
+          "source": "backend-container",
+          "target": "volume",
+          "label": "persist",
+          "type": "step"
+        },
+        {
+          "id": "i7",
+          "source": "firebase",
+          "target": "caddy",
+          "label": "HTTPS API calls",
+          "type": "smoothstep"
+        },
+        {
+          "id": "i8",
+          "source": "terraform",
+          "target": "firebase",
+          "label": "provisions",
+          "type": "smoothstep"
+        }
+      ]
+    }
+  },
+  "api": {
+    "baseUrl": "http://localhost:8080",
+    "endpoints": [
+      {
+        "id": "store-memory",
+        "name": "Store Memory",
+        "description": "Persist a decision, convention or discovery. Scoped to the org behind the API key.",
+        "method": "POST",
+        "path": "/v1/memory/store",
+        "headers": [
+          {
+            "key": "Authorization",
+            "value": "Bearer nm_demo_acme_sarah",
+            "required": true
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "required": true
+          }
+        ],
+        "body": {
+          "type": "json",
+          "example": "{\n  \"title\": \"Use snake_case for all REST endpoints\",\n  \"type\": \"pattern\",\n  \"project\": \"nexusmind\",\n  \"scope\": \"project\",\n  \"content\": \"What: naming convention for public routes.\\nWhy: consistency across services.\"\n}"
+        },
+        "flowVisualization": {
+          "nodeSequence": [
+            "mcp-clients",
+            "mcp-server",
+            "auth",
+            "rest-api",
+            "sqlite",
+            "audit"
+          ],
+          "timing": {
+            "mcp-clients": 300,
+            "mcp-server": 700,
+            "auth": 1100,
+            "rest-api": 1500,
+            "sqlite": 2000,
+            "audit": 2400
+          }
+        }
+      },
+      {
+        "id": "search-memory",
+        "name": "Search Memories",
+        "description": "Semantic search across the team's memories, ranked by embedding similarity.",
+        "method": "POST",
+        "path": "/v1/memory/search",
+        "headers": [
+          {
+            "key": "Authorization",
+            "value": "Bearer nm_demo_acme_sarah",
+            "required": true
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "required": true
+          }
+        ],
+        "body": {
+          "type": "json",
+          "example": "{\n  \"query\": \"how do we handle auth in the gateway\",\n  \"project\": \"nexusmind\",\n  \"limit\": 10\n}"
+        },
+        "flowVisualization": {
+          "nodeSequence": [
+            "mcp-clients",
+            "mcp-server",
+            "auth",
+            "rest-api",
+            "embeddings",
+            "sqlite"
+          ],
+          "timing": {
+            "mcp-clients": 300,
+            "mcp-server": 700,
+            "auth": 1100,
+            "rest-api": 1500,
+            "embeddings": 2000,
+            "sqlite": 2400
+          }
+        }
+      },
+      {
+        "id": "get-context",
+        "name": "Get Project Context",
+        "description": "Return the org's conventions plus recent memories \u2014 what an agent loads at session start.",
+        "method": "GET",
+        "path": "/v1/context",
+        "headers": [
+          {
+            "key": "Authorization",
+            "value": "Bearer nm_demo_acme_sarah",
+            "required": true
+          }
+        ],
+        "flowVisualization": {
+          "nodeSequence": [
+            "admin-panel",
+            "auth",
+            "rest-api",
+            "sqlite"
+          ],
+          "timing": {
+            "admin-panel": 300,
+            "auth": 800,
+            "rest-api": 1300,
+            "sqlite": 1800
+          }
+        }
+      },
+      {
+        "id": "memory-graph",
+        "name": "Memory Graph",
+        "description": "Return memories and their links as a graph, for visualising how decisions relate.",
+        "method": "GET",
+        "path": "/v1/memory/graph",
+        "headers": [
+          {
+            "key": "Authorization",
+            "value": "Bearer nm_demo_acme_admin",
+            "required": true
+          }
+        ],
+        "flowVisualization": {
+          "nodeSequence": [
+            "admin-panel",
+            "auth",
+            "rest-api",
+            "sqlite"
+          ],
+          "timing": {
+            "admin-panel": 300,
+            "auth": 800,
+            "rest-api": 1300,
+            "sqlite": 1800
+          }
+        }
+      }
+    ]
+  },
+  "github": "https://github.com/smart-coder-labs/nexus-mind",
+  "publishedAt": "2026-09-02",
+  "keyFeatures": [
+    {
+      "title": "Multi-tenant by construction",
+      "description": "The auth middleware resolves an API key to a (user, org) pair and injects that scope into every downstream query. Cross-tenant reads are impossible by construction rather than forbidden by convention."
+    },
+    {
+      "title": "An audit trail on every operation",
+      "description": "Every store, search and delete is recorded with user, tool and timestamp. This is what makes a shared AI memory acceptable to a team: an admin can always answer where a convention came from."
+    },
+    {
+      "title": "MCP as the front door",
+      "description": "Agents connect over the Model Context Protocol, so Claude Code, Cursor and any other MCP client work without a bespoke integration each."
+    },
+    {
+      "title": "One binary and one file",
+      "description": "Rust with SQLite bundled in. The whole deployment is `docker compose up` \u2014 no external database to provision, back up or operate."
+    }
+  ]
+}

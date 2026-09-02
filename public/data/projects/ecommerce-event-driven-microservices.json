@@ -1,0 +1,501 @@
+{
+  "id": "ecommerce-event-driven-microservices",
+  "slug": "ecommerce-event-driven-microservices",
+  "title": "Event-Driven E-Commerce Microservices",
+  "description": "NestJS monorepo where services talk over Kafka and business logic is decomposed into atomic Steps",
+  "longDescription": "A pnpm monorepo of seven NestJS services behind a single API Gateway, communicating internally over Kafka instead of HTTP. Two decisions shape it: a shared packages/domain package is the only source of truth for inter-service contracts, and business logic is broken into single-responsibility Steps so services orchestrate rather than perform.",
+  "technologies": [
+    "NestJS",
+    "TypeScript",
+    "Kafka",
+    "PostgreSQL 16",
+    "pnpm workspaces",
+    "Next.js",
+    "Docker Compose"
+  ],
+  "status": "in-progress",
+  "featured": false,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "customers-app",
+          "type": "external",
+          "position": {
+            "x": 430,
+            "y": 0
+          },
+          "data": {
+            "label": "Customers App",
+            "icon": "external",
+            "description": "Next.js storefront \u2014 the only external caller",
+            "details": "App Router client under clients/. Talks REST to the gateway and never touches Kafka or a service directly.",
+            "technologies": [
+              "Next.js App Router",
+              "React",
+              "Tailwind CSS"
+            ]
+          }
+        },
+        {
+          "id": "api-gateway",
+          "type": "api",
+          "position": {
+            "x": 430,
+            "y": 190
+          },
+          "data": {
+            "label": "API Gateway",
+            "icon": "gateway",
+            "description": "The single REST surface; everything behind it is Kafka",
+            "details": "Translates external REST calls into Kafka request-response or fire-and-forget event emission. Keeping this boundary strict is what lets services be added or split without changing the public contract.",
+            "technologies": [
+              "NestJS",
+              "REST",
+              "Kafka client"
+            ]
+          }
+        },
+        {
+          "id": "kafka",
+          "type": "queue",
+          "position": {
+            "x": 430,
+            "y": 380
+          },
+          "data": {
+            "label": "Kafka",
+            "icon": "message-queue",
+            "description": "Internal transport for every service-to-service call",
+            "details": "Runs with Zookeeper and kafka-ui in Docker Compose. Carries both request-response exchanges and emitted domain events, so a service can be consumed synchronously or reacted to asynchronously without a second transport.",
+            "technologies": [
+              "Apache Kafka",
+              "Zookeeper",
+              "kafka-ui"
+            ]
+          }
+        },
+        {
+          "id": "domain",
+          "type": "custom",
+          "position": {
+            "x": 30,
+            "y": 380
+          },
+          "data": {
+            "label": "packages/domain",
+            "icon": "custom",
+            "description": "Shared contracts \u2014 the source of truth between services",
+            "details": "Every DTO, event payload and message pattern lives here. A service never redeclares a contract locally, which is what keeps a Kafka-based system from drifting into incompatible payloads.",
+            "technologies": [
+              "TypeScript",
+              "pnpm workspace package"
+            ]
+          }
+        },
+        {
+          "id": "users",
+          "type": "service",
+          "position": {
+            "x": 20,
+            "y": 600
+          },
+          "data": {
+            "label": "Users",
+            "icon": "users",
+            "description": "Accounts and credentials",
+            "details": "Built around the Steps pattern: HashPasswordStep, FindUserByEmailStep, CreateUserStep. The service orchestrates them \u2014 it conducts, it does not perform.",
+            "technologies": [
+              "NestJS",
+              "PostgreSQL",
+              "Steps pattern"
+            ]
+          }
+        },
+        {
+          "id": "products",
+          "type": "service",
+          "position": {
+            "x": 250,
+            "y": 600
+          },
+          "data": {
+            "label": "Products",
+            "icon": "package",
+            "description": "Catalogue",
+            "details": "Owns product data and publishes change events that inventory and checkout react to.",
+            "technologies": [
+              "NestJS",
+              "Kafka events"
+            ]
+          }
+        },
+        {
+          "id": "inventory",
+          "type": "service",
+          "position": {
+            "x": 480,
+            "y": 600
+          },
+          "data": {
+            "label": "Inventory",
+            "icon": "service",
+            "description": "Stock levels",
+            "details": "Consumes product and checkout events to adjust stock, rather than being called synchronously during checkout.",
+            "technologies": [
+              "NestJS",
+              "Kafka consumers"
+            ]
+          }
+        },
+        {
+          "id": "checkout",
+          "type": "service",
+          "position": {
+            "x": 710,
+            "y": 600
+          },
+          "data": {
+            "label": "Checkout",
+            "icon": "service",
+            "description": "Order orchestration",
+            "details": "Coordinates the purchase flow across inventory and payments through events, so a failure in one participant does not roll back a distributed transaction synchronously.",
+            "technologies": [
+              "NestJS",
+              "Event orchestration"
+            ]
+          }
+        },
+        {
+          "id": "payments",
+          "type": "service",
+          "position": {
+            "x": 940,
+            "y": 600
+          },
+          "data": {
+            "label": "Payments",
+            "icon": "service",
+            "description": "Payment processing",
+            "details": "Emits payment outcome events that checkout and email consume independently.",
+            "technologies": [
+              "NestJS",
+              "Kafka events"
+            ]
+          }
+        },
+        {
+          "id": "email",
+          "type": "service",
+          "position": {
+            "x": 1170,
+            "y": 600
+          },
+          "data": {
+            "label": "Email",
+            "icon": "cloud",
+            "description": "Transactional notifications",
+            "details": "Pure consumer \u2014 it subscribes to domain events and sends mail. No other service knows it exists, which is the practical payoff of event-driven decoupling.",
+            "technologies": [
+              "NestJS",
+              "Kafka consumers"
+            ]
+          }
+        },
+        {
+          "id": "users-db",
+          "type": "database",
+          "position": {
+            "x": 20,
+            "y": 820
+          },
+          "data": {
+            "label": "users-db",
+            "icon": "database",
+            "description": "PostgreSQL 16 \u2014 database per service",
+            "details": "Each service owns its storage; nothing reads another service's tables. Defined in Docker Compose with a pg_isready healthcheck so dependent containers start in order.",
+            "technologies": [
+              "postgres:16-alpine",
+              "Healthcheck",
+              "Named volume"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "customers-app",
+          "target": "api-gateway",
+          "label": "REST",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e2",
+          "source": "api-gateway",
+          "target": "kafka",
+          "label": "request / emit",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e3",
+          "source": "kafka",
+          "target": "users",
+          "label": "messages",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "kafka",
+          "target": "products",
+          "label": "messages",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "kafka",
+          "target": "inventory",
+          "label": "events",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e6",
+          "source": "kafka",
+          "target": "checkout",
+          "label": "messages",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e7",
+          "source": "kafka",
+          "target": "payments",
+          "label": "messages",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e8",
+          "source": "kafka",
+          "target": "email",
+          "label": "events",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e9",
+          "source": "domain",
+          "target": "users",
+          "label": "contracts",
+          "type": "step"
+        },
+        {
+          "id": "e10",
+          "source": "users",
+          "target": "users-db",
+          "label": "SQL",
+          "type": "step"
+        }
+      ]
+    },
+    "infrastructure": {
+      "nodes": [
+        {
+          "id": "compose",
+          "type": "custom",
+          "position": {
+            "x": 420,
+            "y": 0
+          },
+          "data": {
+            "label": "Docker Compose",
+            "icon": "custom",
+            "description": "The whole stack as one local environment",
+            "details": "Brings up the broker, its coordinator, the UI and the database on a shared bridge network, with named volumes for anything that must survive a restart.",
+            "technologies": [
+              "Docker Compose",
+              "Bridge network",
+              "Named volumes"
+            ]
+          }
+        },
+        {
+          "id": "kafka-network",
+          "type": "custom",
+          "position": {
+            "x": 420,
+            "y": 200
+          },
+          "data": {
+            "label": "kafka-network",
+            "icon": "custom",
+            "description": "Private bridge network joining every service",
+            "details": "Services address each other by container name on this network. Only the ports explicitly published reach the host, so the broker is not exposed by accident.",
+            "technologies": [
+              "Docker bridge network",
+              "Service discovery by name"
+            ]
+          }
+        },
+        {
+          "id": "zookeeper",
+          "type": "service",
+          "position": {
+            "x": 40,
+            "y": 420
+          },
+          "data": {
+            "label": "Zookeeper",
+            "icon": "service",
+            "description": "Broker coordination",
+            "details": "Kafka's coordinator in this setup. It is infrastructure, not application code: no service talks to it directly.",
+            "technologies": [
+              "Zookeeper"
+            ]
+          }
+        },
+        {
+          "id": "kafka",
+          "type": "queue",
+          "position": {
+            "x": 300,
+            "y": 420
+          },
+          "data": {
+            "label": "Kafka broker",
+            "icon": "message-queue",
+            "description": "The transport every service shares",
+            "details": "Carries both request-response exchanges and emitted domain events. Adding a consumer needs no change to the producer.",
+            "technologies": [
+              "Apache Kafka"
+            ]
+          }
+        },
+        {
+          "id": "kafka-ui",
+          "type": "external",
+          "position": {
+            "x": 580,
+            "y": 420
+          },
+          "data": {
+            "label": "kafka-ui",
+            "icon": "cloud",
+            "description": "Topic and message inspection during development",
+            "details": "A browser UI over the broker, so a failing flow can be traced by reading the actual messages instead of guessing from logs.",
+            "technologies": [
+              "kafka-ui"
+            ]
+          }
+        },
+        {
+          "id": "users-db",
+          "type": "database",
+          "position": {
+            "x": 860,
+            "y": 420
+          },
+          "data": {
+            "label": "users-db",
+            "icon": "database",
+            "description": "PostgreSQL 16, one database per service",
+            "details": "postgres:16-alpine with a pg_isready healthcheck, so dependent containers wait for it to actually accept connections rather than merely having started. Credentials come from the environment with development defaults.",
+            "technologies": [
+              "postgres:16-alpine",
+              "pg_isready healthcheck",
+              "Env-based credentials"
+            ]
+          }
+        },
+        {
+          "id": "volumes",
+          "type": "database",
+          "position": {
+            "x": 600,
+            "y": 640
+          },
+          "data": {
+            "label": "Named volumes",
+            "icon": "database",
+            "description": "kafka-data and users-db-data",
+            "details": "Broker state and database files live outside the containers, so recreating a container does not discard topics or rows.",
+            "technologies": [
+              "Docker volumes"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "n1",
+          "source": "compose",
+          "target": "kafka-network",
+          "label": "creates",
+          "type": "smoothstep"
+        },
+        {
+          "id": "n2",
+          "source": "kafka-network",
+          "target": "zookeeper",
+          "label": "joins",
+          "type": "smoothstep"
+        },
+        {
+          "id": "n3",
+          "source": "kafka-network",
+          "target": "kafka",
+          "label": "joins",
+          "type": "smoothstep"
+        },
+        {
+          "id": "n4",
+          "source": "kafka-network",
+          "target": "kafka-ui",
+          "label": "joins",
+          "type": "smoothstep"
+        },
+        {
+          "id": "n5",
+          "source": "kafka-network",
+          "target": "users-db",
+          "label": "joins",
+          "type": "smoothstep"
+        },
+        {
+          "id": "n6",
+          "source": "kafka",
+          "target": "volumes",
+          "label": "kafka-data",
+          "type": "step"
+        },
+        {
+          "id": "n7",
+          "source": "users-db",
+          "target": "volumes",
+          "label": "users-db-data",
+          "type": "step"
+        }
+      ]
+    }
+  },
+  "github": "https://github.com/cr8297408/ecommerce-event-driven-microservices",
+  "publishedAt": "2026-01-12",
+  "keyFeatures": [
+    {
+      "title": "Services conduct, Steps perform",
+      "description": "Business logic is decomposed into single-responsibility Steps \u2014 HashPasswordStep, FindUserByEmailStep \u2014 that a service orchestrates. It is the discipline that keeps services from turning into fat services."
+    },
+    {
+      "title": "One shared source of truth for contracts",
+      "description": "Every DTO, event payload and message pattern lives in packages/domain. No service redeclares a contract locally, which is what keeps a Kafka system from drifting into incompatible payloads."
+    },
+    {
+      "title": "Kafka carries everything internal",
+      "description": "Both request-response exchanges and emitted domain events travel on one transport, so a service can be consumed synchronously or reacted to asynchronously without a second mechanism."
+    },
+    {
+      "title": "Database per service",
+      "description": "Each service owns its storage and nothing reads another service's tables. Compose brings up Postgres with a pg_isready healthcheck so dependants start in order."
+    }
+  ]
+}

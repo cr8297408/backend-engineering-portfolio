@@ -34,6 +34,12 @@ html.dark {
   --color-border-secondary: hsl(220, 26%, 24%);
 }
 
+/* The navbar is fixed at 4rem tall, so an anchor jump would otherwise land
+   with the section heading hidden underneath it. */
+section[id] {
+  scroll-margin-top: 5.5rem;
+}
+
 /* Ensure theme applies to entire page */
 html {
   scroll-behavior: smooth;
@@ -54,8 +60,11 @@ body {
 }
 
 /* Override React Flow styles with design system tokens */
+/* The canvas stays a distinct surface from the page (it signals "this is
+   interactive"), but the shared blue-grey token read as washed-out next to
+   the black sections around it. */
 .react-flow {
-  background-color: var(--color-bg-secondary);
+  background-color: #0b0f19;
 }
 
 .react-flow__node {

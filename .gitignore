@@ -24,3 +24,6 @@ pnpm-debug.log*
 .idea/
 
 .npmrc
+
+# QA / browser automation artifacts
+.playwright-mcp/

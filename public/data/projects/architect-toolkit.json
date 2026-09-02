@@ -1,0 +1,36 @@
+{
+  "id": "architect-toolkit",
+  "slug": "architect-toolkit",
+  "title": "Architect Toolkit",
+  "description": "Published TypeScript library of reusable design patterns and typed domain errors",
+  "longDescription": "An npm package (@codismart/architect-toolkit) that packages the patterns worth not rewriting per project: Builder, Step, State, Repository, Command and Specification, plus Cassandra and MongoDB adapters, a typed hierarchy of domain errors (network, database, validation) and naming-convention converters between camelCase, snake_case and kebab-case.",
+  "technologies": [
+    "TypeScript",
+    "npm",
+    "Design Patterns",
+    "MongoDB",
+    "Cassandra"
+  ],
+  "status": "completed",
+  "featured": false,
+  "github": "https://github.com/cr8297408/architect-toolkit",
+  "publishedAt": "2024-10-28",
+  "keyFeatures": [
+    {
+      "title": "Patterns as installable code",
+      "description": "Builder, Step, State, Repository, Command and Specification implementations published to npm, so they stop being copy-pasted between projects."
+    },
+    {
+      "title": "A typed hierarchy of domain errors",
+      "description": "Distinct error types for network, database and validation failures, so a caller can branch on the failure kind instead of parsing messages."
+    },
+    {
+      "title": "Storage adapters included",
+      "description": "Modules for working with MongoDB and Cassandra alongside the pattern implementations."
+    },
+    {
+      "title": "Naming-convention converters",
+      "description": "Conversion between camelCase, snake_case and kebab-case \u2014 the boundary chore every integration hits."
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { Navbar } from '../components/react/ui/Navbar';
+import { withBase } from '../lib/paths';
+import { pillars } from '../data/skills';
 ---
 
 <Layout title="About - Backend Engineer Portfolio">
@@ -10,7 +12,7 @@ import { Navbar } from '../components/react/ui/Navbar';
       <!-- Header -->
       <div class="mb-16">
         <a
-          href="/"
+          href={withBase("/")}
           class="inline-flex items-center text-white/60 hover:text-white transition-all duration-200 mb-8"
         >
           <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -38,59 +40,32 @@ import { Navbar } from '../components/react/ui/Navbar';
             solutions that are both technically excellent and business-driven.
           </p>
           <p class="text-white/60 leading-relaxed">
-            This portfolio showcases my work through interactive architecture diagrams and live API demonstrations,
-            giving you a hands-on view of how my projects are built and how they work.
+            This portfolio documents that work the way an engineer would want to receive it: the real architecture of each
+            system, how it is provisioned and deployed, and the reasoning behind the decisions that shape it.
           </p>
         </section>
 
         <!-- Skills -->
         <section class="bg-gradient-to-br from-white/[0.05] to-transparent rounded-3xl p-8 border border-white/10">
-          <h2 class="text-2xl font-medium text-white mb-8">Technical Skills</h2>
+          <h2 class="text-2xl font-medium text-white mb-2">Technical Skills</h2>
+          <p class="text-white/50 text-sm mb-8">
+            The four blocks that carry most of the work.
+            <a href={withBase("/#skills")} class="text-blue-300/80 underline underline-offset-4 decoration-blue-300/30 hover:text-blue-200 transition-colors duration-200">See the full inventory</a>.
+          </p>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Languages -->
-            <div>
-              <h3 class="text-lg font-medium text-blue-400 mb-4">Languages</h3>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">TypeScript</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Node.js</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Go</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Python</span>
+            {pillars.map((pillar) => (
+              <div>
+                <h3 class="text-lg font-medium text-blue-300 mb-3">{pillar.title}</h3>
+                <ul class="flex flex-wrap gap-2">
+                  {pillar.highlights.map((item) => (
+                    <li class="px-3 py-1.5 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-            </div>
-
-            <!-- Databases -->
-            <div>
-              <h3 class="text-lg font-medium text-emerald-400 mb-4">Databases</h3>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">PostgreSQL</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">MongoDB</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Redis</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Elasticsearch</span>
-              </div>
-            </div>
-
-            <!-- Infrastructure -->
-            <div>
-              <h3 class="text-lg font-medium text-orange-400 mb-4">Infrastructure</h3>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Kubernetes</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Docker</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">AWS</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Terraform</span>
-              </div>
-            </div>
-
-            <!-- Tools -->
-            <div>
-              <h3 class="text-lg font-medium text-purple-400 mb-4">Tools & Patterns</h3>
-              <div class="flex flex-wrap gap-2">
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Microservices</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">Event-Driven</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">CI/CD</span>
-                <span class="px-4 py-2 bg-white/5 text-white/70 text-sm rounded-full border border-white/10">gRPC</span>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -116,13 +91,13 @@ import { Navbar } from '../components/react/ui/Navbar';
             <div class="flex items-start gap-4">
               <div class="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center flex-shrink-0">
                 <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
               </div>
               <div>
-                <h3 class="font-medium text-white mb-2">Live API Testing</h3>
+                <h3 class="font-medium text-white mb-2">The Reasoning Behind Each Decision</h3>
                 <p class="text-white/50 text-sm leading-relaxed">
-                  Test endpoints directly from the browser. See request/response flows visualized in real-time as data moves through the system.
+                  Every project states what makes it work and the trade-offs each choice carries, down to individual components.
                 </p>
               </div>
             </div>
@@ -136,7 +111,7 @@ import { Navbar } from '../components/react/ui/Navbar';
               <div>
                 <h3 class="font-medium text-white mb-2">Infrastructure Visualization</h3>
                 <p class="text-white/50 text-sm leading-relaxed">
-                  View cloud infrastructure setups with detailed breakdowns of networking, security, and deployment strategies.
+                  Where a project is deployed, a second diagram covers provisioning, networking, TLS and the release pipeline.
                 </p>
               </div>
             </div>
@@ -152,7 +127,7 @@ import { Navbar } from '../components/react/ui/Navbar';
             Interested in working together or want to discuss a project?
           </p>
           <a
-            href="/projects"
+            href={withBase("/projects")}
             class="inline-block px-8 py-4 bg-white text-black rounded-full hover:bg-white/90 transition-all duration-300 font-medium"
           >
             View My Projects

@@ -2,6 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import { Navbar } from '../components/react/ui/Navbar';
 import { ProjectCard } from '../components/react/ui/ProjectCard';
+import { withBase } from '../lib/paths';
+import HeroTopology from '../components/HeroTopology.astro';
+import { pillars, skillGroups } from '../data/skills';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -13,12 +16,6 @@ const projects = projectFiles.map(file => {
   return JSON.parse(content);
 }).filter(p => p.featured).slice(0, 4); // Show up to 4 featured projects
 
-const skills = {
-  languages: ['TypeScript', 'Go', 'Python', 'Node.js'],
-  databases: ['PostgreSQL', 'MongoDB', 'Redis', 'Elasticsearch'],
-  infrastructure: ['Docker', 'Kubernetes', 'AWS', 'Terraform'],
-  patterns: ['Microservices', 'Event-Driven', 'CQRS', 'DDD']
-};
 ---
 
 <Layout title="Cesar Ruiz Portfolio - Backend Engineer">
@@ -27,44 +24,50 @@ const skills = {
 
   <!-- Hero Section -->
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-    <!-- Background Video -->
-    <div class="absolute inset-0 z-0">
-      <video
-        src="/background.mp4"
-        autoplay
-        loop
-        muted
-        playsinline
-        class="w-full h-full object-cover"
-      />
-    </div>
+    <HeroTopology />
 
     <!-- Content -->
-    <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
-      <h1 id="blur-title" class="text-7xl md:text-8xl lg:text-9xl font-bold mb-8 text-white tracking-tight cursor-default">
-        <span class="blur-char">B</span><span class="blur-char">a</span><span class="blur-char">c</span><span class="blur-char">k</span><span class="blur-char">e</span><span class="blur-char">n</span><span class="blur-char">d</span><br/><span class="blur-char">E</span><span class="blur-char">n</span><span class="blur-char">g</span><span class="blur-char">i</span><span class="blur-char">n</span><span class="blur-char">e</span><span class="blur-char">e</span><span class="blur-char">r</span>
+    <div class="relative z-10 max-w-4xl mx-auto text-center px-6 py-28">
+      <p class="hero-eyebrow mb-6 text-xs md:text-sm font-medium uppercase tracking-[0.28em] text-blue-300/80">
+        Cesar Ruiz — Backend Engineer
+      </p>
+      <h1 class="hero-title text-[2.6rem] leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight text-balance">
+        Systems you can<br class="hidden sm:block"/> inspect, not just read about
       </h1>
-      <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-2xl mx-auto font-light leading-relaxed">
-        Where scalable systems and clean<br class="hidden md:block"/> architecture come together
+      <p class="hero-sub text-lg md:text-xl text-white/70 mb-10 max-w-xl mx-auto font-light leading-relaxed text-balance">
+        Every project here ships with its real architecture diagram, how it is deployed, and the reasoning behind each decision.
       </p>
-      <a
-        href="#projects"
-        class="inline-block px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20 backdrop-blur-sm"
-      >
-        View Projects
-      </a>
-      <p class="mt-6 text-sm text-white/50">
-        <a href="#about" class="hover:text-white/80 transition-colors underline underline-offset-4">Learn more about me</a>
-      </p>
+      <div class="hero-actions flex flex-col sm:flex-row gap-3 justify-center items-center">
+        <a
+          href="#projects"
+          class="w-full sm:w-auto px-8 py-4 bg-white text-black rounded-full hover:bg-blue-50 transition-colors duration-200 font-medium"
+        >
+          Explore the projects
+        </a>
+        <a
+          href="#about"
+          class="w-full sm:w-auto px-8 py-4 bg-white/5 text-white/80 rounded-full hover:bg-white/10 hover:text-white transition-colors duration-200 font-medium border border-white/15"
+        >
+          About me
+        </a>
+      </div>
     </div>
 
-    <!-- Bottom gradient fade -->
-    <div class="absolute bottom-0 left-0 right-0 h-64 bg-gradient-to-t from-black to-transparent z-20 pointer-events-none"></div>
+    <!-- Scroll cue -->
+    <a
+      href="#about"
+      aria-label="Scroll to the About section"
+      class="scroll-cue absolute bottom-8 left-1/2 -translate-x-1/2 z-10 p-3 rounded-full text-white/40 hover:text-white/90 transition-colors duration-200"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+      </svg>
+    </a>
   </section>
 
   <!-- About Section -->
-  <section id="about" class="py-24 px-4 bg-black -mt-32">
-    <div class="max-w-5xl mx-auto pt-32">
+  <section id="about" class="py-24 px-4 bg-black">
+    <div class="max-w-5xl mx-auto">
       <!-- Main Statement -->
       <div class="text-center">
         <h2 class="text-3xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">
@@ -79,102 +82,53 @@ const skills = {
   </section>
 
   <!-- Skills Section -->
-  <section id="skills" class="pt-12 pb-24 px-4 bg-black">
+  <section id="skills" class="pt-12 pb-28 px-4 bg-black">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl md:text-4xl font-medium text-white mb-16 text-center">
-        Technical Skills
-      </h2>
-      <div class="grid md:grid-cols-2 gap-4">
-        <!-- Languages Card -->
-        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-medium text-white">Languages</h3>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              {skills.languages.map((skill) => (
-                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-medium text-white mb-4">Technical Skills</h2>
+        <p class="text-lg text-white/60 max-w-2xl mx-auto">
+          Four blocks carry most of the work. The full inventory is below them.
+        </p>
+      </div>
 
-        <!-- Databases Card -->
-        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-medium text-white">Databases</h3>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              {skills.databases.map((skill) => (
-                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
-                  {skill}
-                </span>
+      <!-- The four differentiating blocks -->
+      <div class="grid md:grid-cols-2 gap-4 mb-20">
+        {pillars.map((pillar) => (
+          <div class="group relative rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.07] to-white/[0.02] p-8 transition-colors duration-300 hover:border-white/25">
+            <h3 class="text-xl font-medium text-white mb-3">{pillar.title}</h3>
+            <p class="text-white/55 leading-relaxed mb-6">{pillar.summary}</p>
+            <ul class="flex flex-wrap gap-2">
+              {pillar.highlights.map((item) => (
+                <li class="rounded-full border border-blue-400/20 bg-blue-400/10 px-3 py-1 text-sm text-blue-100/85">
+                  {item}
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
-        </div>
+        ))}
+      </div>
 
-        <!-- Infrastructure Card -->
-        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
-          <div class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-orange-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-medium text-white">Infrastructure</h3>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              {skills.infrastructure.map((skill) => (
-                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
-                  {skill}
-                </span>
+      <!-- Full inventory -->
+      <h3 class="text-sm font-medium uppercase tracking-[0.22em] text-white/40 mb-8">
+        Full inventory
+      </h3>
+      <div class="skill-columns">
+        {skillGroups.map((group) => (
+          <section class="skill-group">
+            <h4 class="text-xs font-medium uppercase tracking-[0.16em] text-blue-300/70 mb-3">
+              {group.title}
+            </h4>
+            <ul class="space-y-1.5">
+              {group.items.map((item) => (
+                <li class="text-sm leading-snug text-white/60">{item}</li>
               ))}
-            </div>
-          </div>
-        </div>
-
-        <!-- Architecture Card -->
-        <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
-          <div class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-          <div class="relative">
-            <div class="flex items-center gap-3 mb-6">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                </svg>
-              </div>
-              <h3 class="text-xl font-medium text-white">Architecture</h3>
-            </div>
-            <div class="flex flex-wrap gap-2">
-              {skills.patterns.map((skill) => (
-                <span class="px-4 py-2 bg-white/5 text-white/70 rounded-full text-sm border border-white/10 hover:bg-white/10 hover:text-white transition-all duration-200">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
+            </ul>
+          </section>
+        ))}
       </div>
     </div>
   </section>
+
 
   <!-- Projects Section -->
   <section id="projects" class="py-24 px-4 bg-black">
@@ -182,7 +136,7 @@ const skills = {
       <div class="text-center mb-20">
         <h3 class="text-xl md:text-4xl lg:text-5xl font-medium text-white mb-8 leading-tight">What Makes This Portfolio Different</h3>
         <p class="text-lg md:text-xl text-white/60 leading-relaxed max-w-3xl mx-auto">
-          This portfolio showcases my work through interactive architecture diagrams and live API demonstrations, giving you a hands-on view of how my projects are built and how they work. 
+          Every project is documented the way an engineer would want to receive it: the real architecture, how it is deployed, and the reasoning behind each decision.
         </p>
       </div>
 
@@ -204,18 +158,18 @@ const skills = {
           </div>
         </div>
 
-        <!-- Live API Testing -->
+        <!-- Design decisions -->
         <div class="group relative bg-gradient-to-br from-white/[0.07] to-white/[0.02] rounded-3xl p-8 border border-white/10 hover:border-white/20 transition-all duration-300">
           <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           <div class="relative">
             <div class="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
               <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
               </svg>
             </div>
-            <h3 class="text-xl font-medium text-white mb-3">Live API Testing</h3>
+            <h3 class="text-xl font-medium text-white mb-3">The Reasoning, Not a Feature List</h3>
             <p class="text-white/50 text-sm leading-relaxed">
-              Test endpoints directly from the browser. See request/response flows visualized in real-time.
+              Each project explains the decisions that shape it and the trade-offs they carry, down to individual components.
             </p>
           </div>
         </div>
@@ -231,36 +185,31 @@ const skills = {
             </div>
             <h3 class="text-xl font-medium text-white mb-3">Cloud Infrastructure</h3>
             <p class="text-white/50 text-sm leading-relaxed">
-              View infrastructure setups with detailed breakdowns of networking, security, and deployment strategies.
+              Where a project is deployed, a second diagram covers provisioning, networking, TLS and the release pipeline.
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Gallery Grid - Masonry style -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project, index) => (
-          <div class:list={[
-            index === 0 && "md:col-span-2 lg:col-span-1 lg:row-span-2",
-            index === 1 && "lg:col-span-2",
-          ]}>
-            <ProjectCard
-              title={project.title}
-              description={project.longDescription}
-              technologies={project.technologies}
-              slug={project.slug}
-              featured={project.featured}
-              github={project.github}
-              image={project.image}
-              client:load
-            />
-          </div>
+      <!-- Featured projects -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {projects.map((project) => (
+          <ProjectCard
+            title={project.title}
+            description={project.description}
+            technologies={project.technologies}
+            slug={project.slug}
+            featured={project.featured}
+            github={project.github}
+            diagram={project.diagrams?.architecture}
+            client:visible
+          />
         ))}
       </div>
 
       <div class="text-center mt-16">
         <a
-          href="/projects"
+          href={withBase("/projects")}
           class="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
         >
           View All Projects
@@ -283,13 +232,13 @@ const skills = {
       </p>
       <div class="flex gap-4 justify-center flex-wrap">
         <a
-          href="mailto:your.email@example.com"
+          href="mailto:cesarbyte4bit@gmail.com"
           class="px-8 py-4 bg-white text-black rounded-full hover:bg-white/90 transition-all duration-300 font-medium"
         >
           Send Email
         </a>
         <a
-          href="https://github.com/yourusername"
+          href="https://github.com/cr8297408"
           target="_blank"
           rel="noopener noreferrer"
           class="px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
@@ -297,7 +246,7 @@ const skills = {
           GitHub
         </a>
         <a
-          href="https://linkedin.com/in/yourprofile"
+          href="https://linkedin.com/in/cesarbackend"
           target="_blank"
           rel="noopener noreferrer"
           class="px-8 py-4 bg-white/10 text-white rounded-full hover:bg-white/20 transition-all duration-300 font-medium border border-white/20"
@@ -305,61 +254,112 @@ const skills = {
           LinkedIn
         </a>
       </div>
+      <p class="mt-8 text-sm text-white/40">
+        Or reach me directly at
+        <a
+          href="mailto:cesarbyte4bit@gmail.com"
+          class="text-white/70 underline underline-offset-4 decoration-white/25 hover:text-white hover:decoration-white/60 transition-colors duration-200"
+        >cesarbyte4bit@gmail.com</a>
+      </p>
     </div>
   </section>
 
   <!-- Footer -->
   <footer class="py-8 px-4 bg-black border-t border-white/10">
     <div class="max-w-6xl mx-auto text-center text-white/40 text-sm">
-      <p>© {new Date().getFullYear()} Backend Engineer Portfolio. Built with Astro and React.</p>
+      <p>© {new Date().getFullYear()} Cesar Ruiz. Built with Astro and React.</p>
     </div>
   </footer>
 </Layout>
 
 <style>
-  .blur-char {
-    display: inline-block;
-    transition: filter 0.15s ease-out, opacity 0.15s ease-out;
+  /* Quiet load-in: the hero settles into place once, rather than animating on
+     every interaction. Replaces a hover effect that blurred the headline
+     under the cursor — it made the page's own title unreadable. */
+  .hero-eyebrow,
+  .hero-title,
+  .hero-sub,
+  .hero-actions {
+    animation: hero-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+  .hero-eyebrow { animation-delay: 0.05s; }
+  .hero-title   { animation-delay: 0.15s; }
+  .hero-sub     { animation-delay: 0.28s; }
+  .hero-actions { animation-delay: 0.4s; }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  /* A 28-group inventory reads better flowing down narrow columns than
+     wrapping across a grid, and CSS columns keep it a single DOM list —
+     so browser find-in-page still works on every entry. */
+  .skill-columns {
+    column-gap: 2.5rem;
+    columns: 1;
+  }
+
+  .skill-group {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .skill-columns { columns: 2; }
+  }
+
+  @media (min-width: 1024px) {
+    .skill-columns { columns: 3; }
+  }
+
+  @media (min-width: 1280px) {
+    .skill-columns { columns: 4; }
+  }
+
+  .scroll-cue svg {
+    animation: cue-drift 2.4s ease-in-out infinite;
+  }
+
+  @keyframes cue-drift {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(5px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-eyebrow,
+    .hero-title,
+    .hero-sub,
+    .hero-actions,
+    /* A 28-group inventory reads better flowing down narrow columns than
+     wrapping across a grid, and CSS columns keep it a single DOM list —
+     so browser find-in-page still works on every entry. */
+  .skill-columns {
+    column-gap: 2.5rem;
+    columns: 1;
+  }
+
+  .skill-group {
+    break-inside: avoid;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .skill-columns { columns: 2; }
+  }
+
+  @media (min-width: 1024px) {
+    .skill-columns { columns: 3; }
+  }
+
+  @media (min-width: 1280px) {
+    .skill-columns { columns: 4; }
+  }
+
+  .scroll-cue svg {
+      animation: none;
+    }
   }
 </style>
-
-<script>
-  const title = document.getElementById('blur-title');
-  const chars = title?.querySelectorAll('.blur-char');
-  
-  if (title && chars) {
-    const blurRadius = 150; // Distance in pixels where blur starts
-    const maxBlur = 8; // Maximum blur amount
-    
-    title.addEventListener('mousemove', (e) => {
-      const rect = title.getBoundingClientRect();
-      const mouseX = e.clientX;
-      const mouseY = e.clientY;
-      
-      chars.forEach((char: any) => {
-        const charRect = char.getBoundingClientRect();
-        const charCenterX = charRect.left + charRect.width / 2;
-        const charCenterY = charRect.top + charRect.height / 2;
-        
-        const distance = Math.sqrt(
-          Math.pow(mouseX - charCenterX, 2) + 
-          Math.pow(mouseY - charCenterY, 2)
-        );
-        
-        // Calculate blur based on distance (closer = more blur)
-        const blur = Math.max(0, maxBlur - (distance / blurRadius) * maxBlur);
-        const opacity = 1 - (blur / maxBlur) * 0.4;
-        
-        char.style.filter = `blur(${blur}px)`;
-        char.style.opacity = opacity.toString();
-      });
-    });
-    
-    title.addEventListener('mouseleave', () => {
-      chars.forEach((char: any) => {
-        char.style.filter = 'blur(0px)';
-        char.style.opacity = '1';
-      });
-    });
-  }
-</script>

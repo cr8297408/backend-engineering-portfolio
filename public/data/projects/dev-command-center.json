@@ -1,0 +1,233 @@
+{
+  "id": "dev-command-center",
+  "slug": "dev-command-center",
+  "title": "Dev Command Center",
+  "description": "Local-first desktop app to register, run and maintain every dev project from one panel",
+  "longDescription": "A Tauri v2 desktop app with a Rust backend and local SQLite. It detects the stack of any folder you point it at (Node, Python, Rust, PHP, Docker), resolves declared ports, runs dev servers as supervised child processes with live logs, and integrates Git and the GitHub API. Nothing leaves the machine: the GitHub PAT is stored locally and only used for explicit actions.",
+  "technologies": [
+    "Tauri v2",
+    "Rust",
+    "React 19",
+    "TypeScript",
+    "SQLite (WAL)",
+    "Vite 7",
+    "Vitest"
+  ],
+  "status": "in-progress",
+  "featured": false,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "ui",
+          "type": "service",
+          "position": {
+            "x": 430,
+            "y": 0
+          },
+          "data": {
+            "label": "React UI",
+            "icon": "service",
+            "description": "Dashboard, workspace, GitHub hub, Git tab",
+            "details": "React 19 with strict TypeScript. api.ts is the single typed transport layer for IPC into Tauri, and types.ts holds the domain contracts shared with the Rust side \u2014 so a backend signature change surfaces as a compile error, not a runtime one.",
+            "technologies": [
+              "React 19",
+              "TypeScript strict",
+              "Modular CSS"
+            ]
+          }
+        },
+        {
+          "id": "ipc",
+          "type": "api",
+          "position": {
+            "x": 430,
+            "y": 200
+          },
+          "data": {
+            "label": "Tauri IPC",
+            "icon": "gateway",
+            "description": "Typed command boundary between web and native",
+            "details": "Commands are registered in lib.rs, which also composes app state. Every privileged operation \u2014 spawning a process, reading disk, calling GitHub \u2014 crosses this boundary explicitly rather than being available to the frontend by default.",
+            "technologies": [
+              "Tauri v2",
+              "Command registry"
+            ]
+          }
+        },
+        {
+          "id": "scanner",
+          "type": "service",
+          "position": {
+            "x": 20,
+            "y": 420
+          },
+          "data": {
+            "label": "Scanner",
+            "icon": "custom",
+            "description": "Stack, package manager and port detection",
+            "details": "Identifies manifests for Node (npm/pnpm/yarn/bun, Vite, Next, Astro, NestJS), Python (pip/poetry/uv/pipenv, FastAPI, Django, Flask), Rust (Cargo workspaces), PHP (Composer, Laravel, Symfony) and Docker. Ports are extracted from .env, framework config files or the detected scripts.",
+            "technologies": [
+              "Rust",
+              "Manifest heuristics",
+              "Port resolution"
+            ]
+          }
+        },
+        {
+          "id": "process",
+          "type": "service",
+          "position": {
+            "x": 290,
+            "y": 420
+          },
+          "data": {
+            "label": "Process Manager",
+            "icon": "zap",
+            "description": "Child process lifecycle and log capture",
+            "details": "Starts, stops and restarts dev servers as supervised children, streaming stdout/stderr into an integrated console with auto-scroll and filtering. Handles the case the naive version gets wrong: killing the whole process tree, not just the shell that spawned it.",
+            "technologies": [
+              "Rust",
+              "stdout/stderr streaming"
+            ]
+          }
+        },
+        {
+          "id": "github",
+          "type": "service",
+          "position": {
+            "x": 560,
+            "y": 420
+          },
+          "data": {
+            "label": "Git & GitHub",
+            "icon": "cloud",
+            "description": "Status, pull, push, publish, safe offload",
+            "details": "Combines Git CLI calls with the GitHub API. Safe Offload frees disk space by deleting a local clone only after verifying the working tree is clean and every branch is pushed \u2014 a destructive action gated behind a verifiable precondition.",
+            "technologies": [
+              "git CLI",
+              "GitHub REST API",
+              "Local PAT"
+            ]
+          }
+        },
+        {
+          "id": "disk",
+          "type": "service",
+          "position": {
+            "x": 830,
+            "y": 420
+          },
+          "data": {
+            "label": "Disk Analyzer",
+            "icon": "package",
+            "description": "Sizes and cleans node_modules, target, .venv, .next",
+            "details": "Computes on-disk size of throwaway directories and reclaims them behind a dry-run plus explicit confirmation. Deletion is never the default path.",
+            "technologies": [
+              "Rust",
+              "Dry-run",
+              "Explicit confirmation"
+            ]
+          }
+        },
+        {
+          "id": "sqlite",
+          "type": "database",
+          "position": {
+            "x": 430,
+            "y": 650
+          },
+          "data": {
+            "label": "Local SQLite",
+            "icon": "database",
+            "description": "projects \u00b7 command_history \u00b7 settings",
+            "details": "Stored in the OS app data directory in WAL mode so reads and writes do not block each other. Paths are canonicalised and deduplicated on insert, which is what keeps the same project from being registered twice via a symlink.",
+            "technologies": [
+              "SQLite WAL",
+              "Auto migrations",
+              "Canonical paths"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "ui",
+          "target": "ipc",
+          "label": "typed invoke",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2",
+          "source": "ipc",
+          "target": "scanner",
+          "label": "detect stack",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3",
+          "source": "ipc",
+          "target": "process",
+          "label": "run / stop",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "ipc",
+          "target": "github",
+          "label": "git actions",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "ipc",
+          "target": "disk",
+          "label": "analyze / clean",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e6",
+          "source": "scanner",
+          "target": "sqlite",
+          "label": "persist metadata",
+          "type": "step"
+        },
+        {
+          "id": "e7",
+          "source": "process",
+          "target": "sqlite",
+          "label": "command_history",
+          "type": "step"
+        },
+        {
+          "id": "e8",
+          "source": "github",
+          "target": "sqlite",
+          "label": "settings (PAT)",
+          "type": "step"
+        }
+      ]
+    }
+  },
+  "publishedAt": "2026-09-01",
+  "keyFeatures": [
+    {
+      "title": "Point it at a folder and it knows the stack",
+      "description": "Detects manifests for Node, Python, Rust, PHP and Docker, then resolves the declared port from .env, framework config or the detected scripts."
+    },
+    {
+      "title": "Supervised processes with live logs",
+      "description": "Dev servers run as supervised children with stdout and stderr streamed into an integrated console. Stopping one kills the process tree, not just the shell that spawned it."
+    },
+    {
+      "title": "Safe Offload deletes only what is provably safe",
+      "description": "Frees disk space by removing a local clone strictly after verifying the working tree is clean and every branch is pushed. A destructive action gated behind a verifiable precondition."
+    },
+    {
+      "title": "Local-first, and it stays local",
+      "description": "SQLite in WAL mode inside the app data directory. The GitHub token is stored locally and only used for actions you trigger."
+    }
+  ]
+}

@@ -1,0 +1,227 @@
+{
+  "id": "jarvis",
+  "slug": "jarvis",
+  "title": "J.A.R.V.I.S \u2014 Voice CLI for Gemini",
+  "description": "Voice-first layer over the Gemini CLI: summarises output conversationally and lets you interrupt mid-sentence",
+  "longDescription": "A hands-free co-pilot for CLI-based LLMs. Instead of reading walls of code aloud, every model response passes through a summarisation prompt before hitting the TTS engine. Built on hexagonal architecture so local (faster-whisper, Piper) and remote (OpenAI, ElevenLabs) engines are interchangeable via config \u2014 the core FSM never knows which one is running.",
+  "technologies": [
+    "Python 3.10+",
+    "Hexagonal Architecture",
+    "Silero VAD",
+    "faster-whisper",
+    "Piper TTS",
+    "ElevenLabs",
+    "Gemini API",
+    "Threading"
+  ],
+  "status": "in-progress",
+  "featured": true,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "mic",
+          "type": "external",
+          "position": {
+            "x": 90,
+            "y": 0
+          },
+          "data": {
+            "label": "Microphone",
+            "icon": "external",
+            "description": "Continuously monitored audio line",
+            "details": "Captured with sounddevice/PyAudio on a dedicated listener thread that never blocks, so speech can be detected even while the assistant is talking.",
+            "technologies": [
+              "sounddevice",
+              "PyAudio"
+            ]
+          }
+        },
+        {
+          "id": "vad",
+          "type": "service",
+          "position": {
+            "x": 90,
+            "y": 200
+          },
+          "data": {
+            "label": "VAD Listener",
+            "icon": "zap",
+            "description": "Voice Activity Detection \u2014 the barge-in trigger",
+            "details": "Silero VAD running on its own thread. Silence means 'you finished talking' and flushes the buffer to STT. Speech detected while the FSM is in SPEAKING raises INTERRUPT_SIGNAL, which cancels the audio player mid-sentence and drops back to LISTENING. This is the hardest engineering problem in the project: you cannot block a thread playing audio and expect it to listen at the same time.",
+            "technologies": [
+              "silero-vad",
+              "threading.Event",
+              "Ring buffer"
+            ]
+          }
+        },
+        {
+          "id": "fsm",
+          "type": "service",
+          "position": {
+            "x": 470,
+            "y": 200
+          },
+          "data": {
+            "label": "Core FSM",
+            "icon": "custom",
+            "description": "IDLE \u2192 LISTENING \u2192 THINKING \u2192 SUMMARIZING \u2192 SPEAKING \u2192 WAITING_APPROVAL",
+            "details": "The finite state machine is the only place that knows the conversation flow. WAITING_APPROVAL is a blocking state: anything that writes a file or runs a shell command stops here until the user approves by voice. The core depends on ports only \u2014 swapping ElevenLabs for Piper changes zero lines of FSM code.",
+            "technologies": [
+              "Python",
+              "Finite State Machine",
+              "Ports & Adapters"
+            ]
+          }
+        },
+        {
+          "id": "stt-port",
+          "type": "service",
+          "position": {
+            "x": 60,
+            "y": 430
+          },
+          "data": {
+            "label": "ISpeechRecognizer",
+            "icon": "service",
+            "description": "Port \u2014 transcribe(audio: bytes) -> str",
+            "details": "Strategy pattern. LocalWhisperAdapter runs faster-whisper (CTranslate2) on CPU or GPU; OpenAIWhisperAdapter calls the hosted API. Selected by config.yaml or environment variable at startup.",
+            "technologies": [
+              "faster-whisper",
+              "OpenAI Whisper API"
+            ]
+          }
+        },
+        {
+          "id": "llm-port",
+          "type": "service",
+          "position": {
+            "x": 450,
+            "y": 430
+          },
+          "data": {
+            "label": "Gemini Proxy",
+            "icon": "cloud",
+            "description": "Intercepts raw CLI output before it reaches the screen",
+            "details": "Captures the Gemini CLI's final answer and routes it through a summariser prompt: raw output \u2192 conversational output \u2192 TTS. The rule is absolute \u2014 raw code blocks are never spoken. 'I generated the Python script using pandas. Run it, or save it to a file?' instead of dictating 40 lines of source.",
+            "technologies": [
+              "google-generativeai",
+              "Summariser prompt"
+            ]
+          }
+        },
+        {
+          "id": "tts-port",
+          "type": "service",
+          "position": {
+            "x": 840,
+            "y": 430
+          },
+          "data": {
+            "label": "ITextToSpeech",
+            "icon": "service",
+            "description": "Port \u2014 synthesize(text: str) -> bytes",
+            "details": "LocalPiperAdapter uses Piper (ONNX) for low-latency offline synthesis; ElevenLabsAdapter streams over WebSocket. Both must honour a cancellation signal so barge-in works regardless of which is active.",
+            "technologies": [
+              "piper-tts (ONNX)",
+              "ElevenLabs WebSocket"
+            ]
+          }
+        },
+        {
+          "id": "player",
+          "type": "service",
+          "position": {
+            "x": 840,
+            "y": 660
+          },
+          "data": {
+            "label": "Interruptible Player",
+            "icon": "zap",
+            "description": "Audio output thread that accepts cancellation",
+            "details": "Buffers and plays synthesized speech. On INTERRUPT_SIGNAL it flushes the output buffer immediately rather than finishing the current utterance \u2014 the difference between an assistant that feels responsive and one that talks over you.",
+            "technologies": [
+              "PyAudio",
+              "Cancellation events"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "mic",
+          "target": "vad",
+          "label": "raw audio",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2",
+          "source": "vad",
+          "target": "fsm",
+          "label": "speech / silence events",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3",
+          "source": "fsm",
+          "target": "stt-port",
+          "label": "LISTENING \u2192 THINKING",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "fsm",
+          "target": "llm-port",
+          "label": "THINKING \u2192 SUMMARIZING",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "fsm",
+          "target": "tts-port",
+          "label": "SPEAKING",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e6",
+          "source": "tts-port",
+          "target": "player",
+          "label": "audio stream",
+          "type": "step",
+          "animated": true
+        },
+        {
+          "id": "e7",
+          "source": "vad",
+          "target": "player",
+          "label": "INTERRUPT_SIGNAL",
+          "type": "smoothstep",
+          "animated": true
+        }
+      ]
+    }
+  },
+  "github": "https://github.com/cr8297408/J.A.R.V.I.S",
+  "publishedAt": "2026-04-21",
+  "keyFeatures": [
+    {
+      "title": "It never reads code aloud",
+      "description": "Every model response passes through a summariser prompt before reaching TTS. You hear 'I generated the script using pandas \u2014 run it or save it?' instead of forty dictated lines of source."
+    },
+    {
+      "title": "Barge-in that actually interrupts",
+      "description": "A VAD listener runs on its own thread. Speech detected while the assistant is talking raises INTERRUPT_SIGNAL, which flushes the audio buffer mid-sentence instead of finishing the utterance."
+    },
+    {
+      "title": "Engines are swappable by config",
+      "description": "Ports and adapters: local faster-whisper and Piper, or remote OpenAI and ElevenLabs. Switching costs a config line and zero changes to the state machine."
+    },
+    {
+      "title": "Destructive actions block on approval",
+      "description": "Anything that writes a file or runs a shell command parks in WAITING_APPROVAL until you confirm by voice."
+    }
+  ]
+}

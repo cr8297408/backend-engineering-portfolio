@@ -1,0 +1,213 @@
+{
+  "id": "apple-design-system",
+  "slug": "apple-design-system",
+  "title": "Apple Design System",
+  "description": "Published React design system with a shadcn-style CLI: per-component versioning and rollback by git SHA",
+  "longDescription": "A React 19 design system inspired by macOS, iOS and VisionOS, published to npm as @smart-coder-labs/apple-design-system. The interesting part is not the components \u2014 it is the distribution model: the CLI copies source into your project instead of importing a black box, detects your framework, strips 'use client' when the target is not RSC, and tracks each component's version and install history so any component can be rolled back to an exact published git SHA. This portfolio consumes it.",
+  "technologies": [
+    "TypeScript 5.3",
+    "React 19",
+    "Framer Motion 12",
+    "Radix UI",
+    "Tailwind CSS",
+    "Node CLI",
+    "Vitest",
+    "npm"
+  ],
+  "status": "in-progress",
+  "featured": true,
+  "diagrams": {
+    "architecture": {
+      "nodes": [
+        {
+          "id": "components",
+          "type": "service",
+          "position": {
+            "x": 80,
+            "y": 0
+          },
+          "data": {
+            "label": "Component Source",
+            "icon": "package",
+            "description": "The components/ tree \u2014 the single source of truth",
+            "details": "React 19 components built on Radix UI primitives for accessibility and Framer Motion for the Apple-style motion language. Each component owns its folder, README and changelog; there is no compiled component bundle shipped to consumers.",
+            "technologies": [
+              "React 19",
+              "Radix UI",
+              "Framer Motion 12",
+              "Tailwind CSS"
+            ]
+          }
+        },
+        {
+          "id": "registry",
+          "type": "database",
+          "position": {
+            "x": 500,
+            "y": 0
+          },
+          "data": {
+            "label": "registry.json",
+            "icon": "database",
+            "description": "Generated manifest: versions, dependencies, git SHAs",
+            "details": "Built by scripts/build-registry.ts. Records every component's current version, its inter-component dependencies and the exact git SHA of each published version. Recording the SHA is what makes rollback work without maintaining a tag per component.",
+            "technologies": [
+              "tsx",
+              "Generated manifest",
+              "Semantic versioning"
+            ]
+          }
+        },
+        {
+          "id": "cli",
+          "type": "api",
+          "position": {
+            "x": 290,
+            "y": 220
+          },
+          "data": {
+            "label": "CLI",
+            "icon": "gateway",
+            "description": "init \u00b7 add \u00b7 update \u00b7 rollback",
+            "details": "Published as the `apple-design-system` bin. `init` detects the framework and writes design-system.json; `add` resolves inter-component dependencies transitively; `update` pulls the latest registry version; `rollback` checks out a prior version by its recorded SHA.",
+            "technologies": [
+              "Node >=20.19",
+              "TypeScript",
+              "Interactive prompts"
+            ]
+          }
+        },
+        {
+          "id": "detector",
+          "type": "service",
+          "position": {
+            "x": 700,
+            "y": 220
+          },
+          "data": {
+            "label": "Framework Detector",
+            "icon": "custom",
+            "description": "Next.js \u00b7 Vite \u00b7 Astro \u00b7 Remix / React Router",
+            "details": "Decides the `rsc` flag. With rsc:true (Next.js App Router) components keep their 'use client' directive; with rsc:false (Vite, Astro, Remix, Pages Router) the directive is stripped on copy. This is the detail that makes one registry serve four framework families without per-framework forks.",
+            "technologies": [
+              "Manifest heuristics",
+              "AST transform"
+            ]
+          }
+        },
+        {
+          "id": "config",
+          "type": "database",
+          "position": {
+            "x": 80,
+            "y": 450
+          },
+          "data": {
+            "label": "design-system.json",
+            "icon": "database",
+            "description": "Per-project lockfile with install history",
+            "details": "Lives in the consuming repo. Records componentsDir, globalCss, the rsc flag, and for each installed component its version, status, install/update timestamps and full history array. It is the state that makes `update` and `rollback` deterministic.",
+            "technologies": [
+              "JSON lockfile",
+              "Install history"
+            ]
+          }
+        },
+        {
+          "id": "consumer",
+          "type": "external",
+          "position": {
+            "x": 500,
+            "y": 450
+          },
+          "data": {
+            "label": "Consumer Project",
+            "icon": "external",
+            "description": "Owns the copied source \u2014 no black-box dependency",
+            "details": "Components land as editable source under the configured componentsDir. This portfolio is one such consumer: @smart-coder-labs/apple-design-system sits in its devDependencies and src/styles/apple-ds.css carries the tokens.",
+            "technologies": [
+              "Astro",
+              "Next.js",
+              "Vite",
+              "Remix"
+            ]
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "components",
+          "target": "registry",
+          "label": "build-registry",
+          "type": "smoothstep",
+          "animated": true
+        },
+        {
+          "id": "e2",
+          "source": "registry",
+          "target": "cli",
+          "label": "resolve version + SHA",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e3",
+          "source": "components",
+          "target": "cli",
+          "label": "source to copy",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e4",
+          "source": "cli",
+          "target": "detector",
+          "label": "detect framework",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e5",
+          "source": "detector",
+          "target": "consumer",
+          "label": "strip / keep 'use client'",
+          "type": "step"
+        },
+        {
+          "id": "e6",
+          "source": "cli",
+          "target": "config",
+          "label": "write history",
+          "type": "smoothstep"
+        },
+        {
+          "id": "e7",
+          "source": "cli",
+          "target": "consumer",
+          "label": "copy source",
+          "type": "smoothstep",
+          "animated": true
+        }
+      ]
+    }
+  },
+  "github": "https://github.com/smart-coder-labs/design-system",
+  "demo": "https://smart-coder-labs.github.io/design-system/",
+  "publishedAt": "2026-08-14",
+  "keyFeatures": [
+    {
+      "title": "You own the code",
+      "description": "The CLI copies component source into your repository instead of importing a black-box package, so a component can be edited in place without forking anything."
+    },
+    {
+      "title": "Rollback to an exact published version",
+      "description": "The registry records the git SHA of every published component version, so `rollback` restores precise historical source without maintaining a tag per component."
+    },
+    {
+      "title": "One registry, four framework families",
+      "description": "Framework detection sets an `rsc` flag: Next.js App Router keeps `'use client'`, while Vite, Astro, Remix and Pages Router get it stripped on copy."
+    },
+    {
+      "title": "Per-component version history",
+      "description": "`design-system.json` tracks each installed component's version, status and full install/update history, which is what makes update and rollback deterministic."
+    }
+  ]
+}
